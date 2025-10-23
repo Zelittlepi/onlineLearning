@@ -1,0 +1,16 @@
+com\education\system\security\JwtAuthenticationFilter.class
+com\education\system\dto\LoginRequest.class
+com\education\system\controller\AuthController.class
+com\education\system\entity\User$UserRole.class
+com\education\system\dto\LoginResponse.class
+com\education\system\entity\User.class
+com\education\system\util\JwtUtil.class
+com\education\system\config\SecurityConfig.class
+com\education\system\mapper\UserMapper.class
+com\education\system\controller\DashboardController.class
+com\education\system\security\CustomUserDetailsService.class
+com\education\system\service\impl\UserServiceImpl.class
+com\education\system\security\CustomUserDetailsService$CustomUserPrincipal.class
+com\education\system\EducationSystemApplication.class
+com\education\system\config\DataInitializer.class
+com\education\system\service\UserService.class
