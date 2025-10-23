@@ -17,7 +17,7 @@ import java.util.Map;
  * 教师端控制器
  */
 @RestController
-@RequestMapping("/teacher")
+@RequestMapping("/api/teacher")
 @CrossOrigin(origins = "http://localhost:5173")
 public class TeacherController {
     

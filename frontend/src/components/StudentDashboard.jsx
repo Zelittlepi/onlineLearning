@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import MyCourses from './MyCourses';
+import MyAssignments from './MyAssignments';
 
 const StudentDashboard = () => {
   const { user, logout } = useAuth();
@@ -169,125 +171,10 @@ const StudentDashboard = () => {
         );
 
       case 'courses':
-        return (
-          <div className="module-content-area">
-            <div className="content-header">
-              <h2>📚 我的课程</h2>
-              <p>查看和学习您注册的所有课程内容</p>
-            </div>
-            
-            <div className="courses-grid">
-              <div className="course-card">
-                <div className="course-header">
-                  <div className="course-icon">💻</div>
-                  <div className="course-status">进行中</div>
-                </div>
-                <h3>数据结构与算法</h3>
-                <p>张教授 | 计算机科学系</p>
-                <div className="course-progress">
-                  <div className="progress-bar">
-                    <div className="progress-fill" style={{width: '75%'}}></div>
-                  </div>
-                  <span>75% 完成</span>
-                </div>
-                <div className="course-actions">
-                  <button className="btn-primary">继续学习</button>
-                  <button className="btn-secondary">查看详情</button>
-                </div>
-              </div>
-
-              <div className="course-card">
-                <div className="course-header">
-                  <div className="course-icon">📊</div>
-                  <div className="course-status">进行中</div>
-                </div>
-                <h3>高等数学</h3>
-                <p>李教授 | 数学系</p>
-                <div className="course-progress">
-                  <div className="progress-bar">
-                    <div className="progress-fill" style={{width: '60%'}}></div>
-                  </div>
-                  <span>60% 完成</span>
-                </div>
-                <div className="course-actions">
-                  <button className="btn-primary">继续学习</button>
-                  <button className="btn-secondary">查看详情</button>
-                </div>
-              </div>
-
-              <div className="course-card">
-                <div className="course-header">
-                  <div className="course-icon">🌐</div>
-                  <div className="course-status">即将开始</div>
-                </div>
-                <h3>大学英语</h3>
-                <p>王教授 | 外语学院</p>
-                <div className="course-progress">
-                  <div className="progress-bar">
-                    <div className="progress-fill" style={{width: '0%'}}></div>
-                  </div>
-                  <span>尚未开始</span>
-                </div>
-                <div className="course-actions">
-                  <button className="btn-disabled" disabled>即将开放</button>
-                  <button className="btn-secondary">查看详情</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
+        return <MyCourses user={user} />;
 
       case 'assignments':
-        return (
-          <div className="module-content-area">
-            <div className="content-header">
-              <h2>📝 作业任务</h2>
-              <p>查看和提交您的作业任务</p>
-            </div>
-            
-            <div className="assignments-tabs">
-              <button className="tab-button active">待完成 (2)</button>
-              <button className="tab-button">已提交 (5)</button>
-              <button className="tab-button">已评分 (8)</button>
-            </div>
-
-            <div className="assignments-list">
-              <div className="assignment-item urgent">
-                <div className="assignment-header">
-                  <div className="assignment-course">高等数学</div>
-                  <div className="assignment-due">剩余 1 天</div>
-                </div>
-                <h3>微积分综合练习 - 作业3</h3>
-                <p>完成教材第8章的所有练习题，包括应用题部分。请详细写出解题过程。</p>
-                <div className="assignment-meta">
-                  <span>📅 截止：2024年10月25日 23:59</span>
-                  <span>📊 分值：100分</span>
-                </div>
-                <div className="assignment-actions">
-                  <button className="btn-primary">开始作业</button>
-                  <button className="btn-secondary">查看详情</button>
-                </div>
-              </div>
-
-              <div className="assignment-item">
-                <div className="assignment-header">
-                  <div className="assignment-course">数据结构</div>
-                  <div className="assignment-due">剩余 3 天</div>
-                </div>
-                <h3>二叉树实现 - 编程作业</h3>
-                <p>使用C++实现二叉搜索树的基本操作：插入、删除、查找和遍历。</p>
-                <div className="assignment-meta">
-                  <span>📅 截止：2024年10月27日 23:59</span>
-                  <span>📊 分值：150分</span>
-                </div>
-                <div className="assignment-actions">
-                  <button className="btn-primary">开始作业</button>
-                  <button className="btn-secondary">查看详情</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
+        return <MyAssignments user={user} />;
 
       case 'grades':
         return (

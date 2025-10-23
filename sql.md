@@ -1,3 +1,5 @@
+--本系统的数据库初始化文件
+
 -- 1. 用户表 (核心表)
 CREATE TABLE users (
     id BIGSERIAL PRIMARY KEY,
