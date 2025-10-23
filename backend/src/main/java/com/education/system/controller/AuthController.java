@@ -48,7 +48,7 @@ public class AuthController {
             CustomUserDetailsService.CustomUserPrincipal customUser = (CustomUserDetailsService.CustomUserPrincipal) userDetails;
             User user = customUser.getUser();
             
-            String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name());
+            String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name(), user.getId());
             
             LoginResponse response = new LoginResponse(
                 token,
@@ -128,7 +128,7 @@ public class AuthController {
             System.out.println("用户创建成功，ID: " + user.getId());
             
             // 生成token
-            String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name());
+            String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name(), user.getId());
             
             LoginResponse response = new LoginResponse(
                 token,

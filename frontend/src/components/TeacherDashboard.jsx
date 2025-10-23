@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import CourseManagement from './CourseManagement';
+import AssignmentManagement from './AssignmentManagement';
 
 const TeacherDashboard = () => {
   const { user, logout } = useAuth();
@@ -169,127 +171,10 @@ const TeacherDashboard = () => {
         );
 
       case 'courses':
-        return (
-          <div className="module-content-area">
-            <div className="content-header">
-              <h2>📚 课程管理</h2>
-              <p>创建、编辑和管理您的所有课程</p>
-            </div>
-            
-            <div className="courses-grid">
-              <div className="course-card">
-                <div className="course-header">
-                  <div className="course-icon">💻</div>
-                  <div className="course-status">进行中</div>
-                </div>
-                <h3>数据结构与算法</h3>
-                <p>计算机科学系 | 45名学生</p>
-                <div className="course-progress">
-                  <div className="progress-bar">
-                    <div className="progress-fill" style={{width: '75%'}}></div>
-                  </div>
-                  <span>课程进度：75%</span>
-                </div>
-                <div className="course-actions">
-                  <button className="btn-primary">管理课程</button>
-                  <button className="btn-secondary">查看详情</button>
-                </div>
-              </div>
-
-              <div className="course-card">
-                <div className="course-header">
-                  <div className="course-icon">🔧</div>
-                  <div className="course-status">进行中</div>
-                </div>
-                <h3>软件工程基础</h3>
-                <p>计算机科学系 | 38名学生</p>
-                <div className="course-progress">
-                  <div className="progress-bar">
-                    <div className="progress-fill" style={{width: '60%'}}></div>
-                  </div>
-                  <span>课程进度：60%</span>
-                </div>
-                <div className="course-actions">
-                  <button className="btn-primary">管理课程</button>
-                  <button className="btn-secondary">查看详情</button>
-                </div>
-              </div>
-
-              <div className="course-card">
-                <div className="course-header">
-                  <div className="course-icon">🤖</div>
-                  <div className="course-status">即将开始</div>
-                </div>
-                <h3>人工智能导论</h3>
-                <p>计算机科学系 | 52名学生</p>
-                <div className="course-progress">
-                  <div className="progress-bar">
-                    <div className="progress-fill" style={{width: '0%'}}></div>
-                  </div>
-                  <span>准备中</span>
-                </div>
-                <div className="course-actions">
-                  <button className="btn-disabled" disabled>准备中</button>
-                  <button className="btn-secondary">编辑课程</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
+        return <CourseManagement user={user} />;
 
       case 'assignments':
-        return (
-          <div className="module-content-area">
-            <div className="content-header">
-              <h2>📝 作业管理</h2>
-              <p>发布新作业和批改学生提交的作业</p>
-            </div>
-            
-            <div className="assignments-tabs">
-              <button className="tab-button active">待批改 (23)</button>
-              <button className="tab-button">已发布 (12)</button>
-              <button className="tab-button">草稿 (3)</button>
-            </div>
-
-            <div className="assignments-list">
-              <div className="assignment-item urgent">
-                <div className="assignment-header">
-                  <div className="assignment-course">数据结构</div>
-                  <div className="assignment-due">截止：明天</div>
-                </div>
-                <h3>二叉树实现 - 编程作业</h3>
-                <p>学生需要实现二叉搜索树的基本操作。已提交：23份，待批改：23份</p>
-                <div className="assignment-meta">
-                  <span>📅 发布时间：2024年10月20日</span>
-                  <span>📊 总分：150分</span>
-                  <span>👥 参与学生：45人</span>
-                </div>
-                <div className="assignment-actions">
-                  <button className="btn-primary">开始批改</button>
-                  <button className="btn-secondary">查看详情</button>
-                </div>
-              </div>
-
-              <div className="assignment-item">
-                <div className="assignment-header">
-                  <div className="assignment-course">软件工程</div>
-                  <div className="assignment-due">进行中</div>
-                </div>
-                <h3>项目需求分析报告</h3>
-                <p>分组完成软件需求分析文档。已提交：15份，待批改：15份</p>
-                <div className="assignment-meta">
-                  <span>📅 发布时间：2024年10月18日</span>
-                  <span>📊 总分：100分</span>
-                  <span>👥 参与学生：38人</span>
-                </div>
-                <div className="assignment-actions">
-                  <button className="btn-primary">继续批改</button>
-                  <button className="btn-secondary">查看详情</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
+        return <AssignmentManagement user={user} />;
 
       case 'students':
         return (
