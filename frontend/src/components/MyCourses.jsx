@@ -8,7 +8,7 @@ const MyCourses = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('active');
   
-  // 选课相关状态
+  // Course enrollment related state
   const [showEnrollModal, setShowEnrollModal] = useState(false);
   const [availableCourses, setAvailableCourses] = useState([]);
   const [enrollLoading, setEnrollLoading] = useState(false);
@@ -33,13 +33,13 @@ const MyCourses = ({ user }) => {
         setCourses(response.data.data);
       }
     } catch (error) {
-      console.error('获取课程列表失败:', error);
+      console.error('Failed to fetch course list:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  // 获取可选课程列表
+  // Get available courses list
   const fetchAvailableCourses = async () => {
     setEnrollLoading(true);
     try {
@@ -58,15 +58,15 @@ const MyCourses = ({ user }) => {
         setAvailableCourses(response.data.data);
       }
     } catch (error) {
-      console.error('获取可选课程失败:', error);
+      console.error('Failed to fetch available courses:', error);
     } finally {
       setEnrollLoading(false);
     }
   };
 
-  // 选课功能
+  // Course enrollment functionality
   const enrollCourse = async (courseId) => {
-    if (!confirm('确定要选择这门课程吗？')) return;
+    if (!confirm('Are you sure you want to enroll in this course?')) return;
     
     try {
       const token = localStorage.getItem('token');
@@ -75,18 +75,18 @@ const MyCourses = ({ user }) => {
       });
       
       if (response.data.success) {
-        alert('选课成功！');
+        alert('Enrollment successful!');
         setShowEnrollModal(false);
-        fetchCourses(); // 重新获取课程列表
+        fetchCourses(); // Refresh course list
       }
     } catch (error) {
-      console.error('选课失败:', error);
-      alert('选课失败，请重试');
+      console.error('Enrollment failed:', error);
+      alert('Enrollment failed, please try again');
     }
   };
 
   const dropCourse = async (courseId) => {
-    if (!confirm('确定要退出这门课程吗？')) return;
+    if (!confirm('Are you sure you want to drop this course?')) return;
     
     try {
       const token = localStorage.getItem('token');
@@ -95,46 +95,46 @@ const MyCourses = ({ user }) => {
       });
       
       if (response.data.success) {
-        alert('退课成功！');
-        fetchCourses(); // 重新获取课程列表
+        alert('Course dropped successfully!');
+        fetchCourses(); // Refresh course list
       }
     } catch (error) {
-      console.error('退课失败:', error);
-      alert('退课失败，请重试');
+      console.error('Drop course failed:', error);
+      alert('Drop course failed, please try again');
     }
   };
 
   const getStatusText = (status) => {
     switch(status) {
-      case 'ACTIVE': return '进行中';
-      case 'COMPLETED': return '已完成';
-      case 'DROPPED': return '已退课';
+      case 'ACTIVE': return 'Active';
+      case 'COMPLETED': return 'Completed';
+      case 'NOT_STARTED': return 'Not Started';
       default: return status;
     }
   };
 
   const getLevelText = (level) => {
     switch(level) {
-      case 'BEGINNER': return '初级';
-      case 'INTERMEDIATE': return '中级';
-      case 'ADVANCED': return '高级';
+      case 'BEGINNER': return 'Beginner';
+      case 'INTERMEDIATE': return 'Intermediate';
+      case 'ADVANCED': return 'Advanced';
       default: return level;
     }
   };
 
-  // 打开选课模态框
+  // Open course selection modal
   const openEnrollModal = () => {
     setShowEnrollModal(true);
     fetchAvailableCourses();
   };
 
-  // 关闭选课模态框
+  // Close course selection modal
   const closeEnrollModal = () => {
     setShowEnrollModal(false);
     setSearchFilters({ keyword: '', category: 'ALL', level: 'ALL' });
   };
 
-  // 处理搜索筛选
+  // Handle search filters
   const handleFilterChange = (field, value) => {
     setSearchFilters(prev => ({
       ...prev,
@@ -142,7 +142,7 @@ const MyCourses = ({ user }) => {
     }));
   };
 
-  // 应用搜索筛选
+  // Apply search filters
   const applyFilters = () => {
     fetchAvailableCourses();
   };
@@ -165,7 +165,7 @@ const MyCourses = ({ user }) => {
     return (
       <div className="loading-container">
         <div className="spinner"></div>
-        <p>加载课程中...</p>
+        <p>Loading courses...</p>
       </div>
     );
   }
@@ -173,44 +173,44 @@ const MyCourses = ({ user }) => {
   return (
     <div className="my-courses">
       <div className="content-header">
-        <h2>📚 我的课程</h2>
+        <h2>📚 My Courses</h2>
         <div className="header-actions">
-          <p>查看您已选修的所有课程</p>
+          <p>View all your enrolled courses</p>
           <button className="btn-primary" onClick={openEnrollModal}>
-            ➕ 选择新课程
+            ➕ Enroll in New Course
           </button>
         </div>
       </div>
 
-      {/* 课程标签页 */}
+      {/* Course tabs */}
       <div className="course-tabs">
         <button 
           className={`tab-button ${activeTab === 'active' ? 'active' : ''}`}
           onClick={() => setActiveTab('active')}
         >
-          进行中 ({courses.filter(c => c.enrollment.status === 'ACTIVE').length})
+          Active ({courses.filter(c => c.enrollment.status === 'ACTIVE').length})
         </button>
         <button 
           className={`tab-button ${activeTab === 'completed' ? 'active' : ''}`}
           onClick={() => setActiveTab('completed')}
         >
-          已完成 ({courses.filter(c => c.enrollment.status === 'COMPLETED').length})
+          Completed ({courses.filter(c => c.enrollment.status === 'COMPLETED').length})
         </button>
         <button 
           className={`tab-button ${activeTab === 'dropped' ? 'active' : ''}`}
           onClick={() => setActiveTab('dropped')}
         >
-          已退课 ({courses.filter(c => c.enrollment.status === 'DROPPED').length})
+          Dropped ({courses.filter(c => c.enrollment.status === 'DROPPED').length})
         </button>
       </div>
 
-      {/* 课程列表 */}
+      {/* Course list */}
       <div className="courses-grid">
         {filteredCourses.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">📚</div>
-            <h3>暂无课程</h3>
-            <p>您还没有{activeTab === 'active' ? '正在学习的' : activeTab === 'completed' ? '已完成的' : '已退的'}课程</p>
+            <h3>No courses found</h3>
+            <p>You don't have any {activeTab === 'active' ? 'active' : activeTab === 'completed' ? 'completed' : 'dropped'} courses yet</p>
           </div>
         ) : (
           filteredCourses.map(courseInfo => {
@@ -232,33 +232,33 @@ const MyCourses = ({ user }) => {
                     <div className="meta-row">
                       <div className="meta-item">
                         <span className="meta-icon">📊</span>
-                        <span>级别: {getLevelText(course.level)}</span>
+                        <span>Level: {getLevelText(course.level)}</span>
                       </div>
                       <div className="meta-item">
                         <span className="meta-icon">⏰</span>
-                        <span>时长: {course.durationHours}小时</span>
+                        <span>Duration: {course.durationHours} hours</span>
                       </div>
                     </div>
                     
                     <div className="meta-row">
                       <div className="meta-item">
                         <span className="meta-icon">📅</span>
-                        <span>选课时间: {new Date(enrollment.enrollmentDate).toLocaleDateString()}</span>
+                        <span>Enrollment Date: {new Date(enrollment.enrollmentDate).toLocaleDateString()}</span>
                       </div>
                       {enrollment.grade && (
                         <div className="meta-item">
                           <span className="meta-icon">🎯</span>
-                          <span>成绩: {enrollment.grade}分</span>
+                          <span>Grade: {enrollment.grade} points</span>
                         </div>
                       )}
                     </div>
                   </div>
                   
-                  {/* 学习进度 */}
+                  {/* Learning progress */}
                   {enrollment.status === 'ACTIVE' && (
                     <div className="progress-section">
                       <div className="progress-header">
-                        <span>学习进度</span>
+                        <span>Learning Progress</span>
                         <span>{enrollment.completionPercentage || 0}%</span>
                       </div>
                       <div className="progress-bar">
@@ -275,31 +275,31 @@ const MyCourses = ({ user }) => {
                   {enrollment.status === 'ACTIVE' && (
                     <>
                       <button className="btn-primary">
-                        继续学习
+                        Continue Learning
                       </button>
                       <button 
                         className="btn-secondary"
                         onClick={() => dropCourse(course.id)}
                       >
-                        退课
+                        Drop Course
                       </button>
                     </>
                   )}
                   {enrollment.status === 'COMPLETED' && (
                     <>
                       <button className="btn-primary">
-                        复习课程
+                        Review Course
                       </button>
                       {enrollment.certificateUrl && (
                         <button className="btn-secondary">
-                          下载证书
+                          Download Certificate
                         </button>
                       )}
                     </>
                   )}
                   {enrollment.status === 'DROPPED' && (
                     <button className="btn-secondary" disabled>
-                      已退课
+                      Dropped
                     </button>
                   )}
                 </div>
@@ -309,79 +309,79 @@ const MyCourses = ({ user }) => {
         )}
       </div>
 
-      {/* 选课模态框 */}
+      {/* Course enrollment modal */}
       {showEnrollModal && (
         <div className="modal-overlay">
           <div className="modal-content large">
             <div className="modal-header">
-              <h3>选择新课程</h3>
+              <h3>Select New Course</h3>
               <button className="close-button" onClick={closeEnrollModal}>×</button>
             </div>
             
             <div className="modal-body">
-              {/* 搜索和筛选区域 */}
+              {/* Search and filter area */}
               <div className="search-filters">
                 <div className="filter-row">
                   <div className="filter-group">
-                    <label>搜索关键词</label>
+                    <label>Search Keywords</label>
                     <input
                       type="text"
-                      placeholder="搜索课程名称或描述..."
+                      placeholder="Search course name or description..."
                       value={searchFilters.keyword}
                       onChange={(e) => handleFilterChange('keyword', e.target.value)}
                     />
                   </div>
                   <div className="filter-group">
-                    <label>课程分类</label>
+                    <label>Course Category</label>
                     <select
                       value={searchFilters.category}
                       onChange={(e) => handleFilterChange('category', e.target.value)}
                     >
-                      <option value="ALL">全部分类</option>
-                      <option value="COMPUTER_SCIENCE">计算机科学</option>
-                      <option value="MATHEMATICS">数学</option>
-                      <option value="PHYSICS">物理</option>
-                      <option value="CHEMISTRY">化学</option>
-                      <option value="BIOLOGY">生物</option>
-                      <option value="ENGINEERING">工程</option>
-                      <option value="BUSINESS">商科</option>
-                      <option value="LANGUAGE">语言</option>
-                      <option value="ARTS">艺术</option>
-                      <option value="OTHER">其他</option>
+                      <option value="ALL">All Categories</option>
+                      <option value="COMPUTER_SCIENCE">Computer Science</option>
+                      <option value="MATHEMATICS">Mathematics</option>
+                      <option value="PHYSICS">Physics</option>
+                      <option value="CHEMISTRY">Chemistry</option>
+                      <option value="BIOLOGY">Biology</option>
+                      <option value="ENGINEERING">Engineering</option>
+                      <option value="BUSINESS">Business</option>
+                      <option value="LANGUAGE">Language</option>
+                      <option value="ARTS">Arts</option>
+                      <option value="OTHER">Other</option>
                     </select>
                   </div>
                   <div className="filter-group">
-                    <label>难度等级</label>
+                    <label>Difficulty Level</label>
                     <select
                       value={searchFilters.level}
                       onChange={(e) => handleFilterChange('level', e.target.value)}
                     >
-                      <option value="ALL">全部等级</option>
-                      <option value="BEGINNER">初级</option>
-                      <option value="INTERMEDIATE">中级</option>
-                      <option value="ADVANCED">高级</option>
+                      <option value="ALL">All Levels</option>
+                      <option value="BEGINNER">Beginner</option>
+                      <option value="INTERMEDIATE">Intermediate</option>
+                      <option value="ADVANCED">Advanced</option>
                     </select>
                   </div>
                   <div className="filter-group">
                     <button className="btn-primary" onClick={applyFilters}>
-                      🔍 搜索
+                      🔍 Search
                     </button>
                   </div>
                 </div>
               </div>
 
-              {/* 课程列表 */}
+              {/* Course list */}
               <div className="available-courses-list">
                 {enrollLoading ? (
                   <div className="loading-container">
                     <div className="spinner"></div>
-                    <p>加载课程中...</p>
+                    <p>Loading courses...</p>
                   </div>
                 ) : availableCourses.length === 0 ? (
                   <div className="empty-state">
                     <div className="empty-icon">📚</div>
-                    <h3>暂无可选课程</h3>
-                    <p>没有找到符合条件的课程，请尝试调整搜索条件</p>
+                    <h3>No available courses</h3>
+                    <p>No courses match the search criteria, please try adjusting your filters</p>
                   </div>
                 ) : (
                   <div className="courses-grid">
@@ -402,11 +402,11 @@ const MyCourses = ({ user }) => {
                             <div className="meta-row">
                               <div className="meta-item">
                                 <span className="meta-icon">⏰</span>
-                                <span>时长: {course.durationHours}小时</span>
+                                <span>Duration: {course.durationHours} hours</span>
                               </div>
                               <div className="meta-item">
                                 <span className="meta-icon">📊</span>
-                                <span>级别: {getLevelText(course.level)}</span>
+                                <span>Level: {getLevelText(course.level)}</span>
                               </div>
                             </div>
                             
@@ -414,7 +414,7 @@ const MyCourses = ({ user }) => {
                               <div className="meta-row">
                                 <div className="meta-item">
                                   <span className="meta-icon">👨‍🏫</span>
-                                  <span>教师: {course.teacherName}</span>
+                                  <span>Teacher: {course.teacherName}</span>
                                 </div>
                               </div>
                             )}
@@ -422,7 +422,7 @@ const MyCourses = ({ user }) => {
                             <div className="meta-row">
                               <div className="meta-item">
                                 <span className="meta-icon">📅</span>
-                                <span>创建时间: {new Date(course.createdAt).toLocaleDateString()}</span>
+                                <span>Created: {new Date(course.createdAt).toLocaleDateString()}</span>
                               </div>
                             </div>
                           </div>
@@ -433,10 +433,10 @@ const MyCourses = ({ user }) => {
                             className="btn-primary"
                             onClick={() => enrollCourse(course.id)}
                           >
-                            选择课程
+                            Enroll Course
                           </button>
                           <button className="btn-secondary">
-                            查看详情
+                            View Details
                           </button>
                         </div>
                       </div>
@@ -448,7 +448,7 @@ const MyCourses = ({ user }) => {
             
             <div className="modal-footer">
               <button className="btn-secondary" onClick={closeEnrollModal}>
-                关闭
+                Close
               </button>
             </div>
           </div>

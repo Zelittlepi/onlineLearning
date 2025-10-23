@@ -19,7 +19,7 @@ const Register = () => {
 
   useEffect(() => {
     if (user) {
-      // 已登录，根据角色重定向
+      // Already logged in, redirect based on role
       if (user.role === 'TEACHER') {
         navigate('/teacher/dashboard');
       } else if (user.role === 'STUDENT') {
@@ -33,24 +33,24 @@ const Register = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
-    setError(''); // 清除错误信息
+    setError(''); // Clear error message
   };
 
   const validateForm = () => {
     if (formData.password !== formData.confirmPassword) {
-      setError('密码和确认密码不匹配');
+      setError('Passwords do not match');
       return false;
     }
     if (formData.password.length < 6) {
-      setError('密码长度至少6位');
+      setError('Password must be at least 6 characters long');
       return false;
     }
     if (formData.username.length < 3) {
-      setError('用户名长度至少3位');
+      setError('Username must be at least 3 characters long');
       return false;
     }
     if (!formData.email.includes('@')) {
-      setError('请输入有效的邮箱地址');
+      setError('Please enter a valid email address');
       return false;
     }
     return true;
@@ -69,7 +69,7 @@ const Register = () => {
     const result = await register(formData);
     
     if (result.success) {
-      // 注册成功，根据角色重定向
+      // Registration successful, redirect based on role
       if (result.user.role === 'TEACHER') {
         navigate('/teacher/dashboard');
       } else if (result.user.role === 'STUDENT') {
@@ -85,14 +85,14 @@ const Register = () => {
   return (
     <div className="register-container">
       <form className="register-form" onSubmit={handleSubmit}>
-        <h1>注册新账户</h1>
+        <h1>Create New Account</h1>
         <p style={{ textAlign: 'center', color: '#666', marginBottom: '2rem' }}>
-          加入我们的在线教育平台
+          Join our online education platform
         </p>
         
         <div className="form-row">
           <div className="form-group">
-            <label htmlFor="username">用户名 *</label>
+            <label htmlFor="username">Username *</label>
             <input
               type="text"
               id="username"
@@ -100,14 +100,14 @@ const Register = () => {
               value={formData.username}
               onChange={handleChange}
               required
-              placeholder="请输入用户名"
+              placeholder="Enter username"
               minLength="3"
               maxLength="20"
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="fullName">姓名 *</label>
+            <label htmlFor="fullName">Full Name *</label>
             <input
               type="text"
               id="fullName"
@@ -115,14 +115,14 @@ const Register = () => {
               value={formData.fullName}
               onChange={handleChange}
               required
-              placeholder="请输入真实姓名"
+              placeholder="Enter your full name"
               maxLength="50"
             />
           </div>
         </div>
 
         <div className="form-group">
-          <label htmlFor="email">邮箱 *</label>
+          <label htmlFor="email">Email *</label>
           <input
             type="email"
             id="email"
@@ -130,13 +130,13 @@ const Register = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            placeholder="请输入邮箱地址"
+            placeholder="Enter email address"
           />
         </div>
 
         <div className="form-row">
           <div className="form-group">
-            <label htmlFor="password">密码 *</label>
+            <label htmlFor="password">Password *</label>
             <input
               type="password"
               id="password"
@@ -144,13 +144,13 @@ const Register = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              placeholder="请输入密码"
+              placeholder="Enter password"
               minLength="6"
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="confirmPassword">确认密码 *</label>
+            <label htmlFor="confirmPassword">Confirm Password *</label>
             <input
               type="password"
               id="confirmPassword"
@@ -158,14 +158,14 @@ const Register = () => {
               value={formData.confirmPassword}
               onChange={handleChange}
               required
-              placeholder="请再次输入密码"
+              placeholder="Confirm password"
               minLength="6"
             />
           </div>
         </div>
 
         <div className="form-group">
-          <label htmlFor="role">角色 *</label>
+          <label htmlFor="role">Role *</label>
           <select
             id="role"
             name="role"
@@ -174,8 +174,8 @@ const Register = () => {
             required
             className="role-select"
           >
-            <option value="STUDENT">学生</option>
-            <option value="TEACHER">教师</option>
+            <option value="STUDENT">Student</option>
+            <option value="TEACHER">Teacher</option>
           </select>
         </div>
 
@@ -184,7 +184,7 @@ const Register = () => {
           className="register-button"
           disabled={loading}
         >
-          {loading ? '注册中...' : '立即注册'}
+          {loading ? 'Creating Account...' : 'Sign Up'}
         </button>
 
         {error && (
@@ -194,7 +194,7 @@ const Register = () => {
         )}
 
         <div className="login-link">
-          已有账户？ <Link to="/login">立即登录</Link>
+          Already have an account? <Link to="/login">Sign in</Link>
         </div>
       </form>
     </div>

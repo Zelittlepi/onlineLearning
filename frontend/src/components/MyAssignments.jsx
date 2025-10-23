@@ -26,7 +26,7 @@ const MyAssignments = ({ user }) => {
         setAssignments(response.data.data);
       }
     } catch (error) {
-      console.error('获取作业列表失败:', error);
+      console.error('Failed to fetch assignments:', error);
     } finally {
       setLoading(false);
     }
@@ -34,7 +34,7 @@ const MyAssignments = ({ user }) => {
 
   const submitAssignment = async (assignmentId) => {
     if (!submissionData.content.trim()) {
-      alert('请填写作业内容');
+      alert('Please fill in the assignment content');
       return;
     }
 
@@ -49,33 +49,33 @@ const MyAssignments = ({ user }) => {
       );
       
       if (response.data.success) {
-        alert('作业提交成功！');
+        alert('Assignment submitted successfully!');
         setSubmissionModal(null);
         setSubmissionData({ content: '', attachmentUrl: '' });
-        fetchAssignments(); // 重新获取作业列表
+        fetchAssignments(); // Refresh assignment list
       }
     } catch (error) {
-      console.error('提交作业失败:', error);
-      alert('提交失败，请重试');
+      console.error('Failed to submit assignment:', error);
+      alert('Submission failed, please try again');
     }
   };
 
   const getTypeText = (type) => {
     switch(type) {
-      case 'HOMEWORK': return '作业';
-      case 'QUIZ': return '测验';
-      case 'PROJECT': return '项目';
-      case 'EXAM': return '考试';
+      case 'HOMEWORK': return 'Homework';
+      case 'QUIZ': return 'Quiz';
+      case 'PROJECT': return 'Project';
+      case 'EXAM': return 'Exam';
       default: return type;
     }
   };
 
   const getStatusText = (status) => {
     switch(status) {
-      case 'SUBMITTED': return '已提交';
-      case 'GRADED': return '已评分';
-      case 'RETURNED': return '已返回';
-      default: return '未提交';
+      case 'SUBMITTED': return 'Submitted';
+      case 'GRADED': return 'Graded';
+      case 'RETURNED': return 'Returned';
+      default: return 'Not Submitted';
     }
   };
 
@@ -90,16 +90,16 @@ const MyAssignments = ({ user }) => {
       }
     }
     
-    // 未提交的作业根据截止时间判断
+    // Unsubmitted assignments judged by due date
     const now = new Date();
     const dueDate = new Date(assignment.dueDate);
     
     if (now > dueDate) {
-      return 'danger'; // 已过期
+      return 'danger'; // Overdue
     } else if ((dueDate - now) / (1000 * 60 * 60 * 24) <= 1) {
-      return 'warning'; // 即将到期（1天内）
+      return 'warning'; // Due soon (within 1 day)
     } else {
-      return 'primary'; // 正常
+      return 'primary'; // Normal
     }
   };
 
@@ -138,7 +138,7 @@ const MyAssignments = ({ user }) => {
     return (
       <div className="loading-container">
         <div className="spinner"></div>
-        <p>加载作业中...</p>
+        <p>Loading assignments...</p>
       </div>
     );
   }
@@ -146,39 +146,39 @@ const MyAssignments = ({ user }) => {
   return (
     <div className="my-assignments">
       <div className="content-header">
-        <h2>📝 作业任务</h2>
-        <p>查看和提交您的课程作业</p>
+        <h2>📝 My Assignments</h2>
+        <p>View and submit your course assignments</p>
       </div>
 
-      {/* 作业标签页 */}
+      {/* Assignment tabs */}
       <div className="assignment-tabs">
         <button 
           className={`tab-button ${activeTab === 'pending' ? 'active' : ''}`}
           onClick={() => setActiveTab('pending')}
         >
-          待提交 ({assignments.filter(a => !a.submission && !isOverdue(a)).length})
+          Pending ({assignments.filter(a => !a.submission && !isOverdue(a)).length})
         </button>
         <button 
           className={`tab-button ${activeTab === 'submitted' ? 'active' : ''}`}
           onClick={() => setActiveTab('submitted')}
         >
-          已提交 ({assignments.filter(a => !!a.submission).length})
+          Submitted ({assignments.filter(a => !!a.submission).length})
         </button>
         <button 
           className={`tab-button ${activeTab === 'overdue' ? 'active' : ''}`}
           onClick={() => setActiveTab('overdue')}
         >
-          已过期 ({assignments.filter(a => !a.submission && isOverdue(a)).length})
+          Overdue ({assignments.filter(a => !a.submission && isOverdue(a)).length})
         </button>
       </div>
 
-      {/* 作业列表 */}
+      {/* Assignment list */}
       <div className="assignments-list">
         {filteredAssignments.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">📝</div>
-            <h3>暂无作业</h3>
-            <p>您目前没有{activeTab === 'pending' ? '待提交的' : activeTab === 'submitted' ? '已提交的' : '过期的'}作业</p>
+            <h3>No assignments</h3>
+            <p>You currently have no {activeTab === 'pending' ? 'pending' : activeTab === 'submitted' ? 'submitted' : 'overdue'} assignments</p>
           </div>
         ) : (
           filteredAssignments.map(assignment => (
@@ -193,7 +193,7 @@ const MyAssignments = ({ user }) => {
                 </div>
                 <div className="assignment-status">
                   <span className={`status-badge ${getStatusColor(assignment)}`}>
-                    {assignment.submission ? getStatusText(assignment.submission.status) : '未提交'}
+                    {assignment.submission ? getStatusText(assignment.submission.status) : 'Not Submitted'}
                   </span>
                 </div>
               </div>
@@ -204,43 +204,43 @@ const MyAssignments = ({ user }) => {
                 <div className="assignment-details">
                   <div className="detail-item">
                     <span className="detail-icon">📅</span>
-                    <span>发布时间: {new Date(assignment.publishDate).toLocaleDateString()}</span>
+                    <span>Published: {new Date(assignment.publishDate).toLocaleDateString()}</span>
                   </div>
                   <div className="detail-item">
                     <span className="detail-icon">⏰</span>
                     <span className={isOverdue(assignment) ? 'overdue-text' : ''}>
-                      截止时间: {new Date(assignment.dueDate).toLocaleString()}
-                      {isOverdue(assignment) && <span className="overdue-tag">已过期</span>}
+                      Due: {new Date(assignment.dueDate).toLocaleString()}
+                      {isOverdue(assignment) && <span className="overdue-tag">Overdue</span>}
                     </span>
                   </div>
                   <div className="detail-item">
                     <span className="detail-icon">🎯</span>
-                    <span>总分: {assignment.totalScore}分</span>
+                    <span>Total Score: {assignment.totalScore} points</span>
                   </div>
                 </div>
 
-                {/* 提交信息 */}
+                {/* Submission information */}
                 {assignment.submission && (
                   <div className="submission-info">
-                    <h4>提交信息</h4>
+                    <h4>Submission Information</h4>
                     <div className="submission-details">
-                      <p><strong>提交时间:</strong> {new Date(assignment.submission.submissionDate).toLocaleString()}</p>
-                      <p><strong>提交内容:</strong> {assignment.submission.content}</p>
+                      <p><strong>Submitted:</strong> {new Date(assignment.submission.submissionDate).toLocaleString()}</p>
+                      <p><strong>Content:</strong> {assignment.submission.content}</p>
                       {assignment.submission.attachmentUrl && (
-                        <p><strong>附件:</strong> 
+                        <p><strong>Attachment:</strong> 
                           <a href={assignment.submission.attachmentUrl} target="_blank" rel="noopener noreferrer">
-                            查看附件
+                            View Attachment
                           </a>
                         </p>
                       )}
                       {assignment.submission.score !== null && (
-                        <p><strong>得分:</strong> 
+                        <p><strong>Score:</strong> 
                           <span className="score">{assignment.submission.score}/{assignment.totalScore}</span>
                         </p>
                       )}
                       {assignment.submission.feedback && (
                         <div className="feedback">
-                          <p><strong>教师反馈:</strong></p>
+                          <p><strong>Teacher Feedback:</strong></p>
                           <div className="feedback-content">{assignment.submission.feedback}</div>
                         </div>
                       )}
@@ -255,22 +255,22 @@ const MyAssignments = ({ user }) => {
                     className="btn-primary"
                     onClick={() => openSubmissionModal(assignment)}
                   >
-                    提交作业
+                    Submit Assignment
                   </button>
                 )}
                 {!assignment.submission && isOverdue(assignment) && (
                   <button className="btn-secondary" disabled>
-                    已过期
+                    Overdue
                   </button>
                 )}
                 {assignment.submission && assignment.submission.status === 'SUBMITTED' && (
                   <button className="btn-secondary" disabled>
-                    等待评分
+                    Awaiting Grade
                   </button>
                 )}
                 {assignment.submission && (assignment.submission.status === 'GRADED' || assignment.submission.status === 'RETURNED') && (
                   <button className="btn-primary">
-                    查看详情
+                    View Details
                   </button>
                 )}
               </div>
@@ -279,32 +279,32 @@ const MyAssignments = ({ user }) => {
         )}
       </div>
 
-      {/* 提交作业模态框 */}
+      {/* Submit assignment modal */}
       {submissionModal && (
         <div className="modal-overlay">
           <div className="modal-content">
             <div className="modal-header">
-              <h3>提交作业: {submissionModal.title}</h3>
+              <h3>Submit Assignment: {submissionModal.title}</h3>
               <button className="close-button" onClick={closeSubmissionModal}>×</button>
             </div>
             
             <div className="modal-body">
               <div className="form-group">
-                <label>作业内容 *</label>
+                <label>Assignment Content *</label>
                 <textarea
                   value={submissionData.content}
                   onChange={(e) => setSubmissionData({
                     ...submissionData,
                     content: e.target.value
                   })}
-                  placeholder="请输入您的作业内容..."
+                  placeholder="Enter your assignment content..."
                   rows="8"
                   required
                 />
               </div>
               
               <div className="form-group">
-                <label>附件链接 (可选)</label>
+                <label>Attachment Link (Optional)</label>
                 <input
                   type="url"
                   value={submissionData.attachmentUrl}
@@ -312,25 +312,25 @@ const MyAssignments = ({ user }) => {
                     ...submissionData,
                     attachmentUrl: e.target.value
                   })}
-                  placeholder="请输入附件的URL链接..."
+                  placeholder="Enter attachment URL link..."
                 />
               </div>
               
               <div className="submission-info-box">
-                <p><strong>截止时间:</strong> {new Date(submissionModal.dueDate).toLocaleString()}</p>
-                <p><strong>总分:</strong> {submissionModal.totalScore}分</p>
+                <p><strong>Due Date:</strong> {new Date(submissionModal.dueDate).toLocaleString()}</p>
+                <p><strong>Total Score:</strong> {submissionModal.totalScore} points</p>
               </div>
             </div>
             
             <div className="modal-footer">
               <button className="btn-secondary" onClick={closeSubmissionModal}>
-                取消
+                Cancel
               </button>
               <button 
                 className="btn-primary"
                 onClick={() => submitAssignment(submissionModal.id)}
               >
-                确认提交
+                Submit
               </button>
             </div>
           </div>

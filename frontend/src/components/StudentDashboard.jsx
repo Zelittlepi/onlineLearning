@@ -10,52 +10,52 @@ const StudentDashboard = () => {
   const modules = [
     { 
       id: 'home', 
-      name: '主页', 
-      description: '学习概览',
+      name: 'Home', 
+      description: 'Learning Overview',
       icon: '🏠'
     },
     { 
       id: 'courses', 
-      name: '我的课程', 
-      description: '查看和学习课程内容',
+      name: 'My Courses', 
+      description: 'View and learn course content',
       icon: '📚',
       badge: '3'
     },
     { 
       id: 'assignments', 
-      name: '作业任务', 
-      description: '查看和提交作业',
+      name: 'Assignments', 
+      description: 'View and submit assignments',
       icon: '📝',
       badge: '2'
     },
     { 
       id: 'grades', 
-      name: '成绩查询', 
-      description: '查看考试和作业成绩',
+      name: 'Grades', 
+      description: 'View exam and assignment grades',
       icon: '📊'
     },
     { 
       id: 'calendar', 
-      name: '学习日程', 
-      description: '查看课程安排和重要日期',
+      name: 'Schedule', 
+      description: 'View course schedule and important dates',
       icon: '📅'
     },
     { 
       id: 'discussions', 
-      name: '讨论区', 
-      description: '参与课程讨论和交流',
+      name: 'Discussions', 
+      description: 'Participate in course discussions',
       icon: '💬'
     },
     { 
       id: 'ai', 
-      name: 'AI学习助手', 
-      description: '智能学习指导和答疑',
+      name: 'AI Assistant', 
+      description: 'Intelligent learning guidance and Q&A',
       icon: '🤖'
     },
     { 
       id: 'profile', 
-      name: '个人中心', 
-      description: '管理个人信息和设置',
+      name: 'Profile', 
+      description: 'Manage personal information and settings',
       icon: '👤'
     }
   ];
@@ -71,8 +71,8 @@ const StudentDashboard = () => {
         return (
           <div className="module-content-area">
             <div className="content-header">
-              <h2>📚 学习概览</h2>
-              <p>欢迎回来，{user?.fullName || user?.username}！查看您的学习进度和最新动态。</p>
+              <h2>📚 Learning Overview</h2>
+              <p>Welcome back, {user?.fullName || user?.username}! Check your learning progress and latest updates.</p>
             </div>
             
             <div className="dashboard-stats">
@@ -80,89 +80,89 @@ const StudentDashboard = () => {
                 <div className="stat-icon">📚</div>
                 <div className="stat-info">
                   <h3>3</h3>
-                  <p>进行中的课程</p>
+                  <p>Active Courses</p>
                 </div>
               </div>
               <div className="stat-item">
                 <div className="stat-icon">📝</div>
                 <div className="stat-info">
                   <h3>2</h3>
-                  <p>待完成作业</p>
+                  <p>Pending Assignments</p>
                 </div>
               </div>
               <div className="stat-item">
                 <div className="stat-icon">🎯</div>
                 <div className="stat-info">
                   <h3>85%</h3>
-                  <p>平均成绩</p>
+                  <p>Average Grade</p>
                 </div>
               </div>
               <div className="stat-item">
                 <div className="stat-icon">⭐</div>
                 <div className="stat-info">
                   <h3>12</h3>
-                  <p>获得徽章</p>
+                  <p>Badges Earned</p>
                 </div>
               </div>
             </div>
 
             <div className="quick-actions">
-              <h3>📋 最近活动</h3>
+              <h3>📋 Recent Activities</h3>
               <div className="activity-feed">
                 <div className="activity-item">
                   <div className="activity-icon">📝</div>
                   <div className="activity-content">
-                    <h4>高等数学作业3</h4>
-                    <p>截止时间：2天后 | 状态：未提交</p>
+                    <h4>Advanced Mathematics Assignment 3</h4>
+                    <p>Due: 2 days | Status: Not submitted</p>
                   </div>
                   <div className="activity-action">
-                    <button className="btn-primary">开始作业</button>
+                    <button className="btn-primary">Start Assignment</button>
                   </div>
                 </div>
                 <div className="activity-item">
                   <div className="activity-icon">🎥</div>
                   <div className="activity-content">
-                    <h4>数据结构与算法 - 第8章</h4>
-                    <p>新视频已发布 | 时长：45分钟</p>
+                    <h4>Data Structures & Algorithms - Chapter 8</h4>
+                    <p>New video published | Duration: 45 minutes</p>
                   </div>
                   <div className="activity-action">
-                    <button className="btn-secondary">观看</button>
+                    <button className="btn-secondary">Watch</button>
                   </div>
                 </div>
                 <div className="activity-item">
                   <div className="activity-icon">💬</div>
                   <div className="activity-content">
-                    <h4>项目管理讨论区</h4>
-                    <p>张教授回复了您的问题</p>
+                    <h4>Project Management Discussion</h4>
+                    <p>Prof. Zhang replied to your question</p>
                   </div>
                   <div className="activity-action">
-                    <button className="btn-secondary">查看</button>
+                    <button className="btn-secondary">View</button>
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="upcoming-events">
-              <h3>📅 即将到来</h3>
+              <h3>📅 Upcoming Events</h3>
               <div className="events-list">
                 <div className="event-item">
                   <div className="event-time">
                     <span className="time">14:00</span>
-                    <span className="date">今天</span>
+                    <span className="date">Today</span>
                   </div>
                   <div className="event-details">
-                    <h4>数据结构直播课</h4>
-                    <p>张教授 | 教室A101</p>
+                    <h4>Data Structures Live Class</h4>
+                    <p>Prof. Zhang | Room A101</p>
                   </div>
                 </div>
                 <div className="event-item">
                   <div className="event-time">
                     <span className="time">10:00</span>
-                    <span className="date">明天</span>
+                    <span className="date">Tomorrow</span>
                   </div>
                   <div className="event-details">
-                    <h4>计算机网络实验</h4>
-                    <p>实验室B203</p>
+                    <h4>Computer Networks Lab</h4>
+                    <p>Lab B203</p>
                   </div>
                 </div>
               </div>
@@ -180,44 +180,44 @@ const StudentDashboard = () => {
         return (
           <div className="module-content-area">
             <div className="content-header">
-              <h2>📊 成绩查询</h2>
-              <p>查看您的考试和作业成绩</p>
+              <h2>📊 Grades</h2>
+              <p>View your exam and assignment grades</p>
             </div>
 
             <div className="grades-summary">
               <div className="grade-card">
-                <h3>学期总成绩</h3>
+                <h3>Semester Grade</h3>
                 <div className="grade-value">85.2</div>
-                <p>排名：15/120</p>
+                <p>Rank: 15/120</p>
               </div>
               <div className="grade-card">
                 <h3>GPA</h3>
                 <div className="grade-value">3.7</div>
-                <p>满分：4.0</p>
+                <p>Out of: 4.0</p>
               </div>
               <div className="grade-card">
-                <h3>学分</h3>
+                <h3>Credits</h3>
                 <div className="grade-value">18/24</div>
-                <p>已获得/总学分</p>
+                <p>Earned/Total</p>
               </div>
             </div>
 
             <div className="grades-table">
-              <h3>课程成绩详情</h3>
+              <h3>Course Grade Details</h3>
               <table>
                 <thead>
                   <tr>
-                    <th>课程名称</th>
-                    <th>期中成绩</th>
-                    <th>期末成绩</th>
-                    <th>平时成绩</th>
-                    <th>总成绩</th>
-                    <th>学分</th>
+                    <th>Course Name</th>
+                    <th>Midterm</th>
+                    <th>Final</th>
+                    <th>Coursework</th>
+                    <th>Overall</th>
+                    <th>Credits</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>数据结构与算法</td>
+                    <td>Data Structures & Algorithms</td>
                     <td>88</td>
                     <td>92</td>
                     <td>85</td>
@@ -225,7 +225,7 @@ const StudentDashboard = () => {
                     <td>4</td>
                   </tr>
                   <tr>
-                    <td>高等数学</td>
+                    <td>Advanced Mathematics</td>
                     <td>75</td>
                     <td>-</td>
                     <td>82</td>
@@ -233,7 +233,7 @@ const StudentDashboard = () => {
                     <td>6</td>
                   </tr>
                   <tr>
-                    <td>大学英语</td>
+                    <td>College English</td>
                     <td>-</td>
                     <td>-</td>
                     <td>-</td>
@@ -255,8 +255,8 @@ const StudentDashboard = () => {
             </div>
             <div className="placeholder-content">
               <div className="placeholder-icon">{modules.find(m => m.id === activeModule)?.icon}</div>
-              <h3>功能开发中</h3>
-              <p>此模块的详细功能正在开发中，敬请期待...</p>
+              <h3>Feature Under Development</h3>
+              <p>This module is currently under development. Stay tuned...</p>
             </div>
           </div>
         );
@@ -265,7 +265,7 @@ const StudentDashboard = () => {
 
   return (
     <div className="blackboard-dashboard">
-      {/* 顶部导航栏 */}
+      {/* Top Navigation Bar */}
       <header className="top-header">
         <div className="header-left">
           <div className="logo">🎓</div>
@@ -273,7 +273,7 @@ const StudentDashboard = () => {
         </div>
         <div className="header-right">
           <div className="search-container">
-            <input type="text" placeholder="搜索课程、作业..." />
+            <input type="text" placeholder="Search courses, assignments..." />
             <span className="search-icon">🔍</span>
           </div>
           <div className="user-menu">
@@ -284,14 +284,14 @@ const StudentDashboard = () => {
             <div className="user-profile">
               <img src={`https://ui-avatars.com/api/?name=${user?.fullName || user?.username}&background=667eea&color=fff`} alt="User" />
               <span className="user-name">{user?.fullName || user?.username}</span>
-              <button className="logout-button" onClick={handleLogout}>退出</button>
+              <button className="logout-button" onClick={handleLogout}>Logout</button>
             </div>
           </div>
         </div>
       </header>
 
       <div className="dashboard-container">
-        {/* 左侧导航栏 */}
+        {/* Left Sidebar */}
         <aside className="left-sidebar">
           <nav className="navigation-menu">
             {modules.map(module => (
@@ -308,7 +308,7 @@ const StudentDashboard = () => {
           </nav>
         </aside>
 
-        {/* 右侧主内容区域 */}
+        {/* Main Content Area */}
         <main className="main-content-area">
           {renderModuleContent()}
         </main>

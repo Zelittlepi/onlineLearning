@@ -10,52 +10,52 @@ const TeacherDashboard = () => {
   const modules = [
     { 
       id: 'home', 
-      name: '教师工作台', 
-      description: '教师工作概览',
+      name: 'Teacher Dashboard', 
+      description: 'Teacher work overview',
       icon: '🏠'
     },
     { 
       id: 'courses', 
-      name: '课程管理', 
-      description: '创建和管理课程内容',
+      name: 'Course Management', 
+      description: 'Create and manage course content',
       icon: '📚',
       badge: '5'
     },
     { 
       id: 'assignments', 
-      name: '作业管理', 
-      description: '发布和批改作业',
+      name: 'Assignment Management', 
+      description: 'Publish and grade assignments',
       icon: '📝',
       badge: '12'
     },
     { 
       id: 'students', 
-      name: '学生管理', 
-      description: '查看和管理学生信息',
+      name: 'Student Management', 
+      description: 'View and manage student information',
       icon: '👥'
     },
     { 
       id: 'analytics', 
-      name: '教学分析', 
-      description: '查看教学数据和学生表现',
+      name: 'Teaching Analytics', 
+      description: 'View teaching data and student performance',
       icon: '📊'
     },
     { 
       id: 'calendar', 
-      name: '教学日程', 
-      description: '管理课程安排和重要事件',
+      name: 'Teaching Schedule', 
+      description: 'Manage course schedules and important events',
       icon: '📅'
     },
     { 
       id: 'ai', 
-      name: 'AI教学助手', 
-      description: '智能教学辅助工具',
+      name: 'AI Teaching Assistant', 
+      description: 'Intelligent teaching assistance tools',
       icon: '🤖'
     },
     { 
       id: 'profile', 
-      name: '个人中心', 
-      description: '管理个人信息和设置',
+      name: 'Profile Center', 
+      description: 'Manage personal information and settings',
       icon: '👤'
     }
   ];
@@ -71,8 +71,8 @@ const TeacherDashboard = () => {
         return (
           <div className="module-content-area">
             <div className="content-header">
-              <h2>👨‍🏫 教师工作台</h2>
-              <p>欢迎回来，{user?.fullName || user?.username} 老师！管理您的课程和学生。</p>
+              <h2>👨‍🏫 Teacher Dashboard</h2>
+              <p>Welcome back, {user?.fullName || user?.username}! Manage your courses and students.</p>
             </div>
             
             <div className="dashboard-stats">
@@ -80,89 +80,89 @@ const TeacherDashboard = () => {
                 <div className="stat-icon">📚</div>
                 <div className="stat-info">
                   <h3>5</h3>
-                  <p>活跃课程</p>
+                  <p>Active Courses</p>
                 </div>
               </div>
               <div className="stat-item">
                 <div className="stat-icon">👥</div>
                 <div className="stat-info">
                   <h3>186</h3>
-                  <p>学生总数</p>
+                  <p>Total Students</p>
                 </div>
               </div>
               <div className="stat-item">
                 <div className="stat-icon">📝</div>
                 <div className="stat-info">
                   <h3>23</h3>
-                  <p>待批改作业</p>
+                  <p>Pending Grading</p>
                 </div>
               </div>
               <div className="stat-item">
                 <div className="stat-icon">⏰</div>
                 <div className="stat-info">
                   <h3>18</h3>
-                  <p>本周课时</p>
+                  <p>Weekly Hours</p>
                 </div>
               </div>
             </div>
 
             <div className="quick-actions">
-              <h3>📋 最近活动</h3>
+              <h3>📋 Recent Activities</h3>
               <div className="activity-feed">
                 <div className="activity-item">
                   <div className="activity-icon">📝</div>
                   <div className="activity-content">
-                    <h4>数据结构作业批改</h4>
-                    <p>23份作业待批改 | 截止时间：明天</p>
+                    <h4>Data Structure Assignment Grading</h4>
+                    <p>23 assignments pending | Due: Tomorrow</p>
                   </div>
                   <div className="activity-action">
-                    <button className="btn-primary">开始批改</button>
+                    <button className="btn-primary">Start Grading</button>
                   </div>
                 </div>
                 <div className="activity-item">
                   <div className="activity-icon">📚</div>
                   <div className="activity-content">
-                    <h4>算法设计课程更新</h4>
-                    <p>新章节已发布 | 15个学生已查看</p>
+                    <h4>Algorithm Design Course Update</h4>
+                    <p>New chapter published | 15 students viewed</p>
                   </div>
                   <div className="activity-action">
-                    <button className="btn-secondary">查看详情</button>
+                    <button className="btn-secondary">View Details</button>
                   </div>
                 </div>
                 <div className="activity-item">
                   <div className="activity-icon">💬</div>
                   <div className="activity-content">
-                    <h4>学生问题答疑</h4>
-                    <p>5个新问题等待回复</p>
+                    <h4>Student Q&A</h4>
+                    <p>5 new questions awaiting reply</p>
                   </div>
                   <div className="activity-action">
-                    <button className="btn-secondary">去回复</button>
+                    <button className="btn-secondary">Reply</button>
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="upcoming-events">
-              <h3>📅 今日课程安排</h3>
+              <h3>📅 Today's Class Schedule</h3>
               <div className="events-list">
                 <div className="event-item">
                   <div className="event-time">
                     <span className="time">14:00</span>
-                    <span className="date">今天</span>
+                    <span className="date">Today</span>
                   </div>
                   <div className="event-details">
-                    <h4>数据结构与算法</h4>
-                    <p>教室A101 | 45名学生</p>
+                    <h4>Data Structures & Algorithms</h4>
+                    <p>Classroom A101 | 45 students</p>
                   </div>
                 </div>
                 <div className="event-item">
                   <div className="event-time">
                     <span className="time">16:30</span>
-                    <span className="date">今天</span>
+                    <span className="date">Today</span>
                   </div>
                   <div className="event-details">
-                    <h4>办公时间答疑</h4>
-                    <p>办公室 | 预约学生：8人</p>
+                    <h4>Office Hours Q&A</h4>
+                    <p>Office | Appointments: 8 students</p>
                   </div>
                 </div>
               </div>
@@ -180,56 +180,56 @@ const TeacherDashboard = () => {
         return (
           <div className="module-content-area">
             <div className="content-header">
-              <h2>👥 学生管理</h2>
-              <p>查看和管理您课程中的学生信息</p>
+              <h2>👥 Student Management</h2>
+              <p>View and manage student information in your courses</p>
             </div>
 
             <div className="grades-table">
-              <h3>学生列表</h3>
+              <h3>Student List</h3>
               <table>
                 <thead>
                   <tr>
-                    <th>学号</th>
-                    <th>姓名</th>
-                    <th>课程</th>
-                    <th>平均成绩</th>
-                    <th>出勤率</th>
-                    <th>最后活跃</th>
-                    <th>操作</th>
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>Course</th>
+                    <th>Average Grade</th>
+                    <th>Attendance</th>
+                    <th>Last Active</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>2021001</td>
-                    <td>张三</td>
-                    <td>数据结构</td>
+                    <td>John Zhang</td>
+                    <td>Data Structures</td>
                     <td>89</td>
                     <td>95%</td>
-                    <td>2小时前</td>
+                    <td>2 hours ago</td>
                     <td>
-                      <button className="btn-secondary">查看详情</button>
+                      <button className="btn-secondary">View Details</button>
                     </td>
                   </tr>
                   <tr>
                     <td>2021002</td>
-                    <td>李四</td>
-                    <td>软件工程</td>
+                    <td>Li Si</td>
+                    <td>Software Engineering</td>
                     <td>92</td>
                     <td>88%</td>
-                    <td>1天前</td>
+                    <td>1 day ago</td>
                     <td>
-                      <button className="btn-secondary">查看详情</button>
+                      <button className="btn-secondary">View Details</button>
                     </td>
                   </tr>
                   <tr>
                     <td>2021003</td>
-                    <td>王五</td>
-                    <td>数据结构</td>
+                    <td>Wang Wu</td>
+                    <td>Data Structures</td>
                     <td>78</td>
                     <td>92%</td>
-                    <td>3小时前</td>
+                    <td>3 hours ago</td>
                     <td>
-                      <button className="btn-secondary">查看详情</button>
+                      <button className="btn-secondary">View Details</button>
                     </td>
                   </tr>
                 </tbody>
@@ -247,8 +247,8 @@ const TeacherDashboard = () => {
             </div>
             <div className="placeholder-content">
               <div className="placeholder-icon">{modules.find(m => m.id === activeModule)?.icon}</div>
-              <h3>功能开发中</h3>
-              <p>此模块的详细功能正在开发中，敬请期待...</p>
+              <h3>Under Development</h3>
+              <p>Detailed features for this module are under development, stay tuned...</p>
             </div>
           </div>
         );
@@ -257,7 +257,7 @@ const TeacherDashboard = () => {
 
   return (
     <div className="blackboard-dashboard">
-      {/* 顶部导航栏 */}
+      {/* Top navigation bar */}
       <header className="top-header">
         <div className="header-left">
           <div className="logo">👨‍🏫</div>
@@ -265,7 +265,7 @@ const TeacherDashboard = () => {
         </div>
         <div className="header-right">
           <div className="search-container">
-            <input type="text" placeholder="搜索课程、学生..." />
+            <input type="text" placeholder="Search courses, students..." />
             <span className="search-icon">🔍</span>
           </div>
           <div className="user-menu">
@@ -276,14 +276,14 @@ const TeacherDashboard = () => {
             <div className="user-profile">
               <img src={`https://ui-avatars.com/api/?name=${user?.fullName || user?.username}&background=764ba2&color=fff`} alt="User" />
               <span className="user-name">{user?.fullName || user?.username}</span>
-              <button className="logout-button" onClick={handleLogout}>退出</button>
+              <button className="logout-button" onClick={handleLogout}>Logout</button>
             </div>
           </div>
         </div>
       </header>
 
       <div className="dashboard-container">
-        {/* 左侧导航栏 */}
+        {/* Left sidebar */}
         <aside className="left-sidebar">
           <nav className="navigation-menu">
             {modules.map(module => (
@@ -300,7 +300,7 @@ const TeacherDashboard = () => {
           </nav>
         </aside>
 
-        {/* 右侧主内容区域 */}
+        {/* Main content area */}
         <main className="main-content-area">
           {renderModuleContent()}
         </main>

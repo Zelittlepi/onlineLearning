@@ -13,7 +13,7 @@ const ProtectedRoute = ({ children, role }) => {
         alignItems: 'center', 
         height: '100vh' 
       }}>
-        <div>加载中...</div>
+        <div>Loading...</div>
       </div>
     );
   }
@@ -23,7 +23,7 @@ const ProtectedRoute = ({ children, role }) => {
   }
 
   if (role && user.role !== role) {
-    // 用户角色不匹配，重定向到正确的dashboard
+    // User role mismatch, redirect to correct dashboard
     if (user.role === 'TEACHER') {
       return <Navigate to="/teacher/dashboard" replace />;
     } else if (user.role === 'STUDENT') {
