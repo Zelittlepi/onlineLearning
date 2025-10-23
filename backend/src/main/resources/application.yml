@@ -7,25 +7,21 @@ spring:
   application:
     name: education-system
   
-  main:
-    allow-circular-references: true
-  
   # 使用PostgreSQL数据库
   datasource:
-    url: jdbc:postgresql://aws-1-us-east-1.pooler.supabase.com:5432/postgres
-    username: postgres.vbdzzryvrsqpmdrkhvxr
-    password: 180031
+    url: jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres
+    username: postgres.gxauxmtreswttfidxleh
+    password: wzsgdsg0031
     driver-class-name: org.postgresql.Driver
     
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
-
+    # 针对Supabase免费层优化连接池
+    hikari:
+      maximum-pool-size: 1
+      minimum-idle: 0
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+    
   # CORS Configuration
   web:
     cors:
@@ -38,19 +34,11 @@ spring:
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
-      logic-delete-field: deleted
-      logic-delete-value: 1
-      logic-not-delete-value: 0
+      id-type: auto
 
 # JWT Configuration
 jwt:
   secret: mySecretKey123456789012345678901234567890
-  expiration: 86400000 # 24 hours in milliseconds
-
-logging:
-  level:
-    com.education.system: DEBUG
-    org.springframework.security: DEBUG
+  expiration: 86400000

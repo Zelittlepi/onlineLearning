@@ -86,20 +86,6 @@ public class AuthController {
                 return ResponseEntity.badRequest().body(error);
             }
             
-            // 检查用户名是否已存在
-            if (userService.findByUsername(registerRequest.getUsername()).isPresent()) {
-                Map<String, String> error = new HashMap<>();
-                error.put("error", "用户名已存在");
-                return ResponseEntity.badRequest().body(error);
-            }
-            
-            // 检查邮箱是否已存在
-            if (userService.findByEmail(registerRequest.getEmail()).isPresent()) {
-                Map<String, String> error = new HashMap<>();
-                error.put("error", "邮箱已被注册");
-                return ResponseEntity.badRequest().body(error);
-            }
-            
             // 验证角色
             User.UserRole role;
             try {
@@ -110,6 +96,26 @@ public class AuthController {
                 return ResponseEntity.badRequest().body(error);
             }
             
+            System.out.println("开始检查用户名和邮箱是否存在...");
+            
+            // 检查用户名是否已存在
+            if (userService.findByUsername(registerRequest.getUsername()).isPresent()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "用户名已存在");
+                return ResponseEntity.badRequest().body(error);
+            }
+            
+            System.out.println("用户名检查通过，检查邮箱...");
+            
+            // 检查邮箱是否已存在
+            if (userService.findByEmail(registerRequest.getEmail()).isPresent()) {
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "邮箱已被注册");
+                return ResponseEntity.badRequest().body(error);
+            }
+            
+            System.out.println("邮箱检查通过，开始创建用户...");
+            
             // 创建用户
             User user = userService.createUser(
                 registerRequest.getUsername(),
@@ -119,7 +125,7 @@ public class AuthController {
                 role
             );
             
-            System.out.println("用户注册成功，ID: " + user.getId());
+            System.out.println("用户创建成功，ID: " + user.getId());
             
             // 生成token
             String token = jwtUtil.generateToken(user.getUsername(), user.getRole().name());
@@ -139,7 +145,7 @@ public class AuthController {
             System.err.println("注册失败: " + e.getMessage());
             e.printStackTrace();
             Map<String, String> error = new HashMap<>();
-            error.put("error", "注册失败: " + e.getMessage());
+            error.put("error", "注册失败，请稍后重试");
             return ResponseEntity.badRequest().body(error);
         }
     }
