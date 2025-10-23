@@ -10,79 +10,52 @@ const TeacherDashboard = () => {
       id: 'home', 
       name: '教师工作台', 
       description: '教师工作概览',
-      icon: '🏠',
-      color: '#667eea'
+      icon: '🏠'
     },
     { 
       id: 'courses', 
       name: '课程管理', 
       description: '创建和管理课程内容',
       icon: '📚',
-      color: '#f093fb',
-      badge: '5门课程'
+      badge: '5'
     },
     { 
       id: 'assignments', 
       name: '作业管理', 
       description: '发布和批改作业',
       icon: '📝',
-      color: '#4facfe',
-      badge: '12待批改'
+      badge: '12'
     },
     { 
       id: 'students', 
       name: '学生管理', 
       description: '查看和管理学生信息',
-      icon: '👥',
-      color: '#43e97b'
+      icon: '👥'
     },
     { 
       id: 'analytics', 
       name: '教学分析', 
       description: '查看教学数据和学生表现',
-      icon: '📊',
-      color: '#fa709a'
+      icon: '📊'
     },
     { 
       id: 'calendar', 
       name: '教学日程', 
       description: '管理课程安排和重要事件',
-      icon: '📅',
-      color: '#ffecd2'
+      icon: '📅'
     },
     { 
       id: 'ai', 
       name: 'AI教学助手', 
       description: '智能教学辅助工具',
-      icon: '🤖',
-      color: '#a8edea'
+      icon: '🤖'
     },
     { 
       id: 'profile', 
       name: '个人中心', 
       description: '管理个人信息和设置',
-      icon: '👤',
-      color: '#d299c2'
+      icon: '👤'
     }
-  ];
-
-  const recentActivities = [
-    { type: '作业', title: '数据结构作业批改', course: '数据结构', count: '23份', status: 'pending' },
-    { type: '课程', title: '算法设计课程更新', course: '算法设计', action: '已发布', status: 'completed' },
-    { type: '讨论', title: '项目答疑', course: '软件工程', participants: '15人', status: 'active' }
-  ];
-
-  const upcomingClasses = [
-    { course: '数据结构与算法', time: '今天 14:00-16:00', room: '教室A101', students: 45 },
-    { course: '软件工程基础', time: '明天 10:00-12:00', room: '教室B203', students: 38 },
-    { course: '人工智能导论', time: '周三 15:30-17:30', room: '实验室C301', students: 52 }
-  ];
-
-  const quickStats = [
-    { label: '总课程数', value: '5', trend: '+1', color: '#667eea' },
-    { label: '活跃学生', value: '186', trend: '+12', color: '#43e97b' },
-    { label: '待批改作业', value: '23', trend: '-5', color: '#f39c12' },
-    { label: '本周课时', value: '18', trend: '+2', color: '#e74c3c' }
   ];
 
   const handleLogout = () => {
@@ -90,54 +63,344 @@ const TeacherDashboard = () => {
     window.location.href = '/login';
   };
 
-  const getStatusColor = (status) => {
-    switch(status) {
-      case 'active': return '#27ae60';
-      case 'pending': return '#f39c12';
-      case 'completed': return '#3498db';
-      default: return '#95a5a6';
+  const renderModuleContent = () => {
+    switch(activeModule) {
+      case 'home':
+        return (
+          <div className="module-content-area">
+            <div className="content-header">
+              <h2>👨‍🏫 教师工作台</h2>
+              <p>欢迎回来，{user?.fullName || user?.username} 老师！管理您的课程和学生。</p>
+            </div>
+            
+            <div className="dashboard-stats">
+              <div className="stat-item">
+                <div className="stat-icon">📚</div>
+                <div className="stat-info">
+                  <h3>5</h3>
+                  <p>活跃课程</p>
+                </div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-icon">👥</div>
+                <div className="stat-info">
+                  <h3>186</h3>
+                  <p>学生总数</p>
+                </div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-icon">📝</div>
+                <div className="stat-info">
+                  <h3>23</h3>
+                  <p>待批改作业</p>
+                </div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-icon">⏰</div>
+                <div className="stat-info">
+                  <h3>18</h3>
+                  <p>本周课时</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="quick-actions">
+              <h3>📋 最近活动</h3>
+              <div className="activity-feed">
+                <div className="activity-item">
+                  <div className="activity-icon">📝</div>
+                  <div className="activity-content">
+                    <h4>数据结构作业批改</h4>
+                    <p>23份作业待批改 | 截止时间：明天</p>
+                  </div>
+                  <div className="activity-action">
+                    <button className="btn-primary">开始批改</button>
+                  </div>
+                </div>
+                <div className="activity-item">
+                  <div className="activity-icon">📚</div>
+                  <div className="activity-content">
+                    <h4>算法设计课程更新</h4>
+                    <p>新章节已发布 | 15个学生已查看</p>
+                  </div>
+                  <div className="activity-action">
+                    <button className="btn-secondary">查看详情</button>
+                  </div>
+                </div>
+                <div className="activity-item">
+                  <div className="activity-icon">💬</div>
+                  <div className="activity-content">
+                    <h4>学生问题答疑</h4>
+                    <p>5个新问题等待回复</p>
+                  </div>
+                  <div className="activity-action">
+                    <button className="btn-secondary">去回复</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="upcoming-events">
+              <h3>📅 今日课程安排</h3>
+              <div className="events-list">
+                <div className="event-item">
+                  <div className="event-time">
+                    <span className="time">14:00</span>
+                    <span className="date">今天</span>
+                  </div>
+                  <div className="event-details">
+                    <h4>数据结构与算法</h4>
+                    <p>教室A101 | 45名学生</p>
+                  </div>
+                </div>
+                <div className="event-item">
+                  <div className="event-time">
+                    <span className="time">16:30</span>
+                    <span className="date">今天</span>
+                  </div>
+                  <div className="event-details">
+                    <h4>办公时间答疑</h4>
+                    <p>办公室 | 预约学生：8人</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'courses':
+        return (
+          <div className="module-content-area">
+            <div className="content-header">
+              <h2>📚 课程管理</h2>
+              <p>创建、编辑和管理您的所有课程</p>
+            </div>
+            
+            <div className="courses-grid">
+              <div className="course-card">
+                <div className="course-header">
+                  <div className="course-icon">💻</div>
+                  <div className="course-status">进行中</div>
+                </div>
+                <h3>数据结构与算法</h3>
+                <p>计算机科学系 | 45名学生</p>
+                <div className="course-progress">
+                  <div className="progress-bar">
+                    <div className="progress-fill" style={{width: '75%'}}></div>
+                  </div>
+                  <span>课程进度：75%</span>
+                </div>
+                <div className="course-actions">
+                  <button className="btn-primary">管理课程</button>
+                  <button className="btn-secondary">查看详情</button>
+                </div>
+              </div>
+
+              <div className="course-card">
+                <div className="course-header">
+                  <div className="course-icon">🔧</div>
+                  <div className="course-status">进行中</div>
+                </div>
+                <h3>软件工程基础</h3>
+                <p>计算机科学系 | 38名学生</p>
+                <div className="course-progress">
+                  <div className="progress-bar">
+                    <div className="progress-fill" style={{width: '60%'}}></div>
+                  </div>
+                  <span>课程进度：60%</span>
+                </div>
+                <div className="course-actions">
+                  <button className="btn-primary">管理课程</button>
+                  <button className="btn-secondary">查看详情</button>
+                </div>
+              </div>
+
+              <div className="course-card">
+                <div className="course-header">
+                  <div className="course-icon">🤖</div>
+                  <div className="course-status">即将开始</div>
+                </div>
+                <h3>人工智能导论</h3>
+                <p>计算机科学系 | 52名学生</p>
+                <div className="course-progress">
+                  <div className="progress-bar">
+                    <div className="progress-fill" style={{width: '0%'}}></div>
+                  </div>
+                  <span>准备中</span>
+                </div>
+                <div className="course-actions">
+                  <button className="btn-disabled" disabled>准备中</button>
+                  <button className="btn-secondary">编辑课程</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'assignments':
+        return (
+          <div className="module-content-area">
+            <div className="content-header">
+              <h2>📝 作业管理</h2>
+              <p>发布新作业和批改学生提交的作业</p>
+            </div>
+            
+            <div className="assignments-tabs">
+              <button className="tab-button active">待批改 (23)</button>
+              <button className="tab-button">已发布 (12)</button>
+              <button className="tab-button">草稿 (3)</button>
+            </div>
+
+            <div className="assignments-list">
+              <div className="assignment-item urgent">
+                <div className="assignment-header">
+                  <div className="assignment-course">数据结构</div>
+                  <div className="assignment-due">截止：明天</div>
+                </div>
+                <h3>二叉树实现 - 编程作业</h3>
+                <p>学生需要实现二叉搜索树的基本操作。已提交：23份，待批改：23份</p>
+                <div className="assignment-meta">
+                  <span>📅 发布时间：2024年10月20日</span>
+                  <span>📊 总分：150分</span>
+                  <span>👥 参与学生：45人</span>
+                </div>
+                <div className="assignment-actions">
+                  <button className="btn-primary">开始批改</button>
+                  <button className="btn-secondary">查看详情</button>
+                </div>
+              </div>
+
+              <div className="assignment-item">
+                <div className="assignment-header">
+                  <div className="assignment-course">软件工程</div>
+                  <div className="assignment-due">进行中</div>
+                </div>
+                <h3>项目需求分析报告</h3>
+                <p>分组完成软件需求分析文档。已提交：15份，待批改：15份</p>
+                <div className="assignment-meta">
+                  <span>📅 发布时间：2024年10月18日</span>
+                  <span>📊 总分：100分</span>
+                  <span>👥 参与学生：38人</span>
+                </div>
+                <div className="assignment-actions">
+                  <button className="btn-primary">继续批改</button>
+                  <button className="btn-secondary">查看详情</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'students':
+        return (
+          <div className="module-content-area">
+            <div className="content-header">
+              <h2>👥 学生管理</h2>
+              <p>查看和管理您课程中的学生信息</p>
+            </div>
+
+            <div className="grades-table">
+              <h3>学生列表</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>学号</th>
+                    <th>姓名</th>
+                    <th>课程</th>
+                    <th>平均成绩</th>
+                    <th>出勤率</th>
+                    <th>最后活跃</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>2021001</td>
+                    <td>张三</td>
+                    <td>数据结构</td>
+                    <td>89</td>
+                    <td>95%</td>
+                    <td>2小时前</td>
+                    <td>
+                      <button className="btn-secondary">查看详情</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>2021002</td>
+                    <td>李四</td>
+                    <td>软件工程</td>
+                    <td>92</td>
+                    <td>88%</td>
+                    <td>1天前</td>
+                    <td>
+                      <button className="btn-secondary">查看详情</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>2021003</td>
+                    <td>王五</td>
+                    <td>数据结构</td>
+                    <td>78</td>
+                    <td>92%</td>
+                    <td>3小时前</td>
+                    <td>
+                      <button className="btn-secondary">查看详情</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        );
+
+      default:
+        return (
+          <div className="module-content-area">
+            <div className="content-header">
+              <h2>{modules.find(m => m.id === activeModule)?.icon} {modules.find(m => m.id === activeModule)?.name}</h2>
+              <p>{modules.find(m => m.id === activeModule)?.description}</p>
+            </div>
+            <div className="placeholder-content">
+              <div className="placeholder-icon">{modules.find(m => m.id === activeModule)?.icon}</div>
+              <h3>功能开发中</h3>
+              <p>此模块的详细功能正在开发中，敬请期待...</p>
+            </div>
+          </div>
+        );
     }
   };
 
   return (
-    <div className="modern-dashboard">
+    <div className="blackboard-dashboard">
       {/* 顶部导航栏 */}
-      <header className="top-navbar">
-        <div className="navbar-brand">
+      <header className="top-header">
+        <div className="header-left">
           <div className="logo">👨‍🏫</div>
           <h1>PolyU Teaching Hub</h1>
         </div>
-        <div className="navbar-actions">
-          <div className="search-box">
+        <div className="header-right">
+          <div className="search-container">
             <input type="text" placeholder="搜索课程、学生..." />
             <span className="search-icon">🔍</span>
           </div>
           <div className="user-menu">
-            <div className="notification-bell">
-              🔔
-              <span className="notification-badge">5</span>
+            <div className="notifications">
+              <span className="notification-icon">🔔</span>
+              <span className="notification-count">5</span>
             </div>
-            <div className="user-avatar">
-              <img src={`https://ui-avatars.com/api/?name=${user?.fullName || user?.username}&background=764ba2&color=fff`} alt="User Avatar" />
-              <div className="user-dropdown">
-                <div className="user-info">
-                  <strong>{user?.fullName || user?.username}</strong>
-                  <span>{user?.email}</span>
-                  <small>教师 | {user?.role}</small>
-                </div>
-                <button className="logout-btn" onClick={handleLogout}>
-                  🚪 退出登录
-                </button>
-              </div>
+            <div className="user-profile">
+              <img src={`https://ui-avatars.com/api/?name=${user?.fullName || user?.username}&background=764ba2&color=fff`} alt="User" />
+              <span className="user-name">{user?.fullName || user?.username}</span>
+              <button className="logout-button" onClick={handleLogout}>退出</button>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="dashboard-layout">
+      <div className="dashboard-container">
         {/* 左侧导航栏 */}
-        <aside className="sidebar-nav">
-          <nav className="nav-menu">
+        <aside className="left-sidebar">
+          <nav className="navigation-menu">
             {modules.map(module => (
               <div 
                 key={module.id}
@@ -145,135 +408,16 @@ const TeacherDashboard = () => {
                 onClick={() => setActiveModule(module.id)}
               >
                 <span className="nav-icon">{module.icon}</span>
-                <span className="nav-label">{module.name}</span>
+                <span className="nav-text">{module.name}</span>
                 {module.badge && <span className="nav-badge">{module.badge}</span>}
               </div>
             ))}
           </nav>
         </aside>
 
-        {/* 主内容区域 */}
-        <main className="main-content">
-          {activeModule === 'home' && (
-            <div className="home-dashboard">
-              {/* 欢迎卡片 */}
-              <div className="welcome-banner teacher-banner">
-                <div className="welcome-content">
-                  <h2>欢迎回来，{user?.fullName || user?.username} 老师！</h2>
-                  <p>今天您有 <strong>3门课程</strong> 要上，<strong>23份作业</strong> 待批改，<strong>5个学生</strong> 等待答疑。</p>
-                </div>
-                <div className="welcome-illustration">
-                  📚
-                </div>
-              </div>
-
-              {/* 快速统计 */}
-              <div className="quick-stats">
-                <h3>快速统计</h3>
-                <div className="stats-grid">
-                  {quickStats.map((stat, index) => (
-                    <div key={index} className="stat-card" style={{ '--stat-color': stat.color }}>
-                      <div className="stat-value">
-                        {stat.value}
-                        <span className="stat-trend">{stat.trend}</span>
-                      </div>
-                      <div className="stat-label">{stat.label}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* 快速访问 */}
-              <div className="quick-access">
-                <h3>教学工具</h3>
-                <div className="modules-grid">
-                  {modules.slice(1).map(module => (
-                    <div 
-                      key={module.id}
-                      className="module-card modern-card"
-                      onClick={() => setActiveModule(module.id)}
-                      style={{ '--card-color': module.color }}
-                    >
-                      <div className="card-icon">{module.icon}</div>
-                      <h4>{module.name}</h4>
-                      <p>{module.description}</p>
-                      {module.badge && <span className="card-badge">{module.badge}</span>}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* 教学活动和即将上课 */}
-              <div className="activity-section">
-                <div className="recent-activities">
-                  <h3>最近活动</h3>
-                  <div className="activity-list">
-                    {recentActivities.map((activity, index) => (
-                      <div key={index} className="activity-item">
-                        <div className="activity-type" style={{ backgroundColor: getStatusColor(activity.status) }}>
-                          {activity.type}
-                        </div>
-                        <div className="activity-details">
-                          <h4>{activity.title}</h4>
-                          <p>{activity.course}</p>
-                          <span className="activity-due">
-                            {activity.count || activity.action || activity.participants}
-                          </span>
-                        </div>
-                        <div className="activity-status">
-                          <span className={`status-indicator ${activity.status}`}></span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="upcoming-events">
-                  <h3>即将上课</h3>
-                  <div className="event-list">
-                    {upcomingClasses.map((classItem, index) => (
-                      <div key={index} className="event-item class-item">
-                        <div className="event-time">
-                          <span className="time">{classItem.time.split(' ')[1]}</span>
-                          <span className="date">{classItem.time.split(' ')[0]}</span>
-                        </div>
-                        <div className="event-details">
-                          <div className="event-type">课程</div>
-                          <h4>{classItem.course}</h4>
-                          <p>{classItem.room} · {classItem.students}名学生</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* 其他模块的内容 */}
-          {activeModule !== 'home' && (
-            <div className="module-content">
-              <div className="module-header">
-                <div className="module-title">
-                  <span className="module-icon">{modules.find(m => m.id === activeModule)?.icon}</span>
-                  <h2>{modules.find(m => m.id === activeModule)?.name}</h2>
-                </div>
-                <div className="module-actions">
-                  <button className="action-btn">刷新</button>
-                  <button className="action-btn primary">新建</button>
-                </div>
-              </div>
-              
-              <div className="module-body">
-                <div className="content-placeholder">
-                  <div className="placeholder-icon">{modules.find(m => m.id === activeModule)?.icon}</div>
-                  <h3>{modules.find(m => m.id === activeModule)?.name}</h3>
-                  <p>{modules.find(m => m.id === activeModule)?.description}</p>
-                  <p className="placeholder-text">此模块的详细功能正在开发中，敬请期待...</p>
-                </div>
-              </div>
-            </div>
-          )}
+        {/* 右侧主内容区域 */}
+        <main className="main-content-area">
+          {renderModuleContent()}
         </main>
       </div>
     </div>
