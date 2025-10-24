@@ -1,3 +1,7 @@
 帮我实现xx端的xxxx功能，包括前端、后端、数据库
 数据库的数据模型你可以参考sql.md文件，需要你需要新的表也可以告诉我来创建，并且完善sql.md
 不需要你运行代码，我自己手动启动测试，只需要你帮我写好代码
+
+帮我把前端的老师端assignment mangement 和学生端的asignment端的修改一下，把assignment栏目改为activities，为课程活动除了assignment。还可能有quiz，announcement、课上练习等，包括前端、后端、数据库
+数据库的数据模型你可以参考sql.md文件，需要你需要新的表也可以告诉我来创建，并且完善sql.md，比如可能需要添加quiz表啥的
+不需要你运行代码，我自己手动启动测试，只需要你帮我写好代码，俩端都适配，你把改好的sql重新写到sql-new.md里面，不要改sql.md

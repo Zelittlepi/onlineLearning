@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import MyCourses from './MyCourses';
-import MyAssignments from './MyAssignments';
+import MyActivities from './MyActivities';
 
 const StudentDashboard = () => {
   const { user, logout } = useAuth();
@@ -22,10 +22,10 @@ const StudentDashboard = () => {
       badge: '3'
     },
     { 
-      id: 'assignments', 
-      name: 'Assignments', 
-      description: 'View and submit assignments',
-      icon: '📝',
+      id: 'activities', 
+      name: 'Activities', 
+      description: 'View and complete course activities',
+      icon: '🎯',
       badge: '2'
     },
     { 
@@ -84,10 +84,10 @@ const StudentDashboard = () => {
                 </div>
               </div>
               <div className="stat-item">
-                <div className="stat-icon">📝</div>
+                <div className="stat-icon">🎯</div>
                 <div className="stat-info">
                   <h3>2</h3>
-                  <p>Pending Assignments</p>
+                  <p>Pending Activities</p>
                 </div>
               </div>
               <div className="stat-item">
@@ -110,13 +110,13 @@ const StudentDashboard = () => {
               <h3>📋 Recent Activities</h3>
               <div className="activity-feed">
                 <div className="activity-item">
-                  <div className="activity-icon">📝</div>
+                  <div className="activity-icon">🎯</div>
                   <div className="activity-content">
                     <h4>Advanced Mathematics Assignment 3</h4>
                     <p>Due: 2 days | Status: Not submitted</p>
                   </div>
                   <div className="activity-action">
-                    <button className="btn-primary">Start Assignment</button>
+                    <button className="btn-primary">Start Activity</button>
                   </div>
                 </div>
                 <div className="activity-item">
@@ -173,8 +173,8 @@ const StudentDashboard = () => {
       case 'courses':
         return <MyCourses user={user} />;
 
-      case 'assignments':
-        return <MyAssignments user={user} />;
+      case 'activities':
+        return <MyActivities user={user} />;
 
       case 'grades':
         return (

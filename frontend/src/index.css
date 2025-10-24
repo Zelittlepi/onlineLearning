@@ -14,8 +14,10 @@ body {
 /* 课程管理样式 */
 .course-management,
 .assignment-management,
+.activity-management,
 .my-courses,
-.my-assignments {
+.my-assignments,
+.my-activities {
   padding: 1rem;
 }
 

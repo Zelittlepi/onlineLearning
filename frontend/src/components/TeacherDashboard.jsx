@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import CourseManagement from './CourseManagement';
-import AssignmentManagement from './AssignmentManagement';
+import ActivityManagement from './ActivityManagement';
 
 const TeacherDashboard = () => {
   const { user, logout } = useAuth();
@@ -22,10 +22,10 @@ const TeacherDashboard = () => {
       badge: '5'
     },
     { 
-      id: 'assignments', 
-      name: 'Assignment Management', 
-      description: 'Publish and grade assignments',
-      icon: '📝',
+      id: 'activities', 
+      name: 'Activity Management', 
+      description: 'Create and manage course activities',
+      icon: '🎯',
       badge: '12'
     },
     { 
@@ -91,7 +91,7 @@ const TeacherDashboard = () => {
                 </div>
               </div>
               <div className="stat-item">
-                <div className="stat-icon">📝</div>
+                <div className="stat-icon">🎯</div>
                 <div className="stat-info">
                   <h3>23</h3>
                   <p>Pending Grading</p>
@@ -110,10 +110,10 @@ const TeacherDashboard = () => {
               <h3>📋 Recent Activities</h3>
               <div className="activity-feed">
                 <div className="activity-item">
-                  <div className="activity-icon">📝</div>
+                  <div className="activity-icon">🎯</div>
                   <div className="activity-content">
                     <h4>Data Structure Assignment Grading</h4>
-                    <p>23 assignments pending | Due: Tomorrow</p>
+                    <p>23 activities pending | Due: Tomorrow</p>
                   </div>
                   <div className="activity-action">
                     <button className="btn-primary">Start Grading</button>
@@ -173,8 +173,8 @@ const TeacherDashboard = () => {
       case 'courses':
         return <CourseManagement user={user} />;
 
-      case 'assignments':
-        return <AssignmentManagement user={user} />;
+      case 'activities':
+        return <ActivityManagement user={user} />;
 
       case 'students':
         return (
