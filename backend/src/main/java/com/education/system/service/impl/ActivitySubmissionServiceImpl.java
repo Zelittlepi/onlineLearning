@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Map;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -41,22 +43,26 @@ public class ActivitySubmissionServiceImpl extends ServiceImpl<ActivitySubmissio
         }
         
         if (activity.getAttemptsAllowed() > 0) {
-            int attemptCount = getAttemptCount(submission.getActivityId(), submission.getStudentId());
+            // 获取学生已提交的次数
+            List<ActivitySubmission> existingSubmissions = getStudentSubmissions(
+                submission.getStudentId(), submission.getActivityId());
+            int attemptCount = existingSubmissions != null ? existingSubmissions.size() : 0;
             if (attemptCount >= activity.getAttemptsAllowed()) {
                 throw new RuntimeException("Maximum attempts exceeded");
             }
         }
         
-        // 检查截止时间
+        // 检查截止时间并设置状态
         if (activity.getDueDate() != null && LocalDateTime.now().isAfter(activity.getDueDate())) {
-            submission.setIsLate(true);
+            submission.setStatus("LATE_SUBMITTED");
         } else {
-            submission.setIsLate(false);
+            submission.setStatus("SUBMITTED");
         }
-        
-        // 设置初始状态
-        submission.setStatus("SUBMITTED");
-        submission.setAttemptNumber(getAttemptCount(submission.getActivityId(), submission.getStudentId()) + 1);
+        // 设置尝试次数
+        List<ActivitySubmission> existingSubmissions = getStudentSubmissions(
+            submission.getStudentId(), submission.getActivityId());
+        int attemptNumber = existingSubmissions != null ? existingSubmissions.size() + 1 : 1;
+        submission.setAttemptNumber(attemptNumber);
         
         save(submission);
         log.info("Student {} submitted activity {}", submission.getStudentId(), submission.getActivityId());
@@ -65,193 +71,87 @@ public class ActivitySubmissionServiceImpl extends ServiceImpl<ActivitySubmissio
 
     @Override
     @Transactional
-    public ActivitySubmission gradeSubmission(Long id, BigDecimal score, String feedback) {
+    public ActivitySubmission gradeSubmission(Long id, BigDecimal score, String feedback, Long graderId) {
         ActivitySubmission submission = getById(id);
         if (submission != null) {
             submission.setScore(score);
             submission.setFeedback(feedback);
             submission.setStatus("GRADED");
             submission.setGradedAt(LocalDateTime.now());
+            submission.setGradedBy(graderId);
             updateById(submission);
-            log.info("Graded submission: {} with score: {}", id, score);
+            log.info("Graded submission: {} with score: {} by grader: {}", id, score, graderId);
             return submission;
         }
         return null;
     }
 
-    @Override
-    public ActivitySubmission getSubmissionById(Long id) {
-        return getById(id);
-    }
+    // 移除不需要的方法，使用继承的 getById 方法
 
     @Override
     public List<ActivitySubmission> getSubmissionsByActivity(Long activityId) {
-        return baseMapper.selectByActivityIdWithStudentInfo(activityId);
+        QueryWrapper<ActivitySubmission> wrapper = new QueryWrapper<>();
+        wrapper.eq("activity_id", activityId)
+               .orderByDesc("submitted_at");
+        return list(wrapper);
     }
 
-    @Override
-    public List<ActivitySubmission> getSubmissionsByStudent(Long studentId) {
-        return baseMapper.selectByStudentIdWithActivityInfo(studentId);
-    }
+    // 移除了不在接口中定义的方法
 
-    @Override
-    public ActivitySubmission getSubmissionByActivityAndStudent(Long activityId, Long studentId) {
-        return baseMapper.selectByActivityAndStudent(activityId, studentId);
-    }
-
-    @Override
-    public List<ActivitySubmission> getSubmissionsByTeacher(Long teacherId) {
-        return baseMapper.selectByTeacherIdWithDetails(teacherId);
-    }
-
-    @Override
-    public IPage<ActivitySubmission> getSubmissionsForGrading(Long teacherId, String status, Page<ActivitySubmission> page) {
-        return baseMapper.selectForGrading(page, teacherId, status);
-    }
-
-    @Override
-    public int getAttemptCount(Long activityId, Long studentId) {
-        QueryWrapper<ActivitySubmission> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("activity_id", activityId)
-                   .eq("student_id", studentId);
-        return (int) count(queryWrapper);
-    }
-
-    @Override
-    public Map<String, Object> getSubmissionStatistics(Long activityId) {
-        Map<String, Object> statistics = new HashMap<>();
-        
-        // 总提交数
-        QueryWrapper<ActivitySubmission> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("activity_id", activityId);
-        long totalSubmissions = count(queryWrapper);
-        statistics.put("totalSubmissions", totalSubmissions);
-        
-        // 已评分数
-        queryWrapper.clear();
-        queryWrapper.eq("activity_id", activityId).eq("status", "GRADED");
-        long gradedSubmissions = count(queryWrapper);
-        statistics.put("gradedSubmissions", gradedSubmissions);
-        
-        // 待评分数
-        queryWrapper.clear();
-        queryWrapper.eq("activity_id", activityId).eq("status", "SUBMITTED");
-        long pendingSubmissions = count(queryWrapper);
-        statistics.put("pendingSubmissions", pendingSubmissions);
-        
-        // 迟交数
-        queryWrapper.clear();
-        queryWrapper.eq("activity_id", activityId).eq("is_late", true);
-        long lateSubmissions = count(queryWrapper);
-        statistics.put("lateSubmissions", lateSubmissions);
-        
-        // 平均分
-        Map<String, Object> scoreStats = baseMapper.getScoreStatistics(activityId);
-        statistics.putAll(scoreStats);
-        
-        return statistics;
-    }
-
-    @Override
-    public Map<String, Object> getStudentProgress(Long studentId, Long courseId) {
-        Map<String, Object> progress = new HashMap<>();
-        
-        // 总活动数
-        CourseActivity activity = new CourseActivity();
-        activity.setCourseId(courseId);
-        QueryWrapper<CourseActivity> activityQuery = new QueryWrapper<>(activity);
-        activityQuery.eq("is_published", true);
-        long totalActivities = courseActivityService.count(activityQuery);
-        progress.put("totalActivities", totalActivities);
-        
-        // 已提交数
-        QueryWrapper<ActivitySubmission> submissionQuery = new QueryWrapper<>();
-        submissionQuery.eq("student_id", studentId)
-                      .inSql("activity_id", "SELECT id FROM course_activities WHERE course_id = " + courseId);
-        long submittedActivities = count(submissionQuery);
-        progress.put("submittedActivities", submittedActivities);
-        
-        // 已评分数
-        submissionQuery.clear();
-        submissionQuery.eq("student_id", studentId)
-                      .eq("status", "GRADED")
-                      .inSql("activity_id", "SELECT id FROM course_activities WHERE course_id = " + courseId);
-        long gradedActivities = count(submissionQuery);
-        progress.put("gradedActivities", gradedActivities);
-        
-        // 平均分
-        Map<String, Object> scoreStats = baseMapper.getStudentScoreStatistics(studentId, courseId);
-        progress.putAll(scoreStats);
-        
-        return progress;
-    }
+    // 移除了不在接口中定义的方法 (getSubmissionStatistics, getStudentProgress, returnSubmission)
 
     @Override
     @Transactional
-    public Boolean returnSubmission(Long id, String reason) {
-        ActivitySubmission submission = getById(id);
-        if (submission != null) {
-            submission.setStatus("RETURNED");
-            submission.setFeedback(reason);
-            submission.setGradedAt(LocalDateTime.now());
-            updateById(submission);
-            log.info("Returned submission: {} with reason: {}", id, reason);
-            return true;
+    public List<ActivitySubmission> batchGradeSubmissions(List<Map<String, Object>> gradingData, Long graderId) {
+        List<ActivitySubmission> gradedSubmissions = new ArrayList<>();
+        
+        for (Map<String, Object> grading : gradingData) {
+            Long submissionId = Long.parseLong(grading.get("submissionId").toString());
+            BigDecimal score = new BigDecimal(grading.get("score").toString());
+            String feedback = grading.get("feedback") != null ? grading.get("feedback").toString() : null;
+            
+            ActivitySubmission submission = getById(submissionId);
+            if (submission != null) {
+                submission.setScore(score);
+                submission.setFeedback(feedback);
+                submission.setStatus("GRADED");
+                submission.setGradedAt(LocalDateTime.now());
+                submission.setGradedBy(graderId);
+                updateById(submission);
+                gradedSubmissions.add(submission);
+            }
         }
-        return false;
-    }
-
-    @Override
-    @Transactional
-    public Boolean batchGradeSubmissions(List<Long> submissionIds, BigDecimal score, String feedback) {
-        List<ActivitySubmission> submissions = listByIds(submissionIds);
-        for (ActivitySubmission submission : submissions) {
-            submission.setScore(score);
-            submission.setFeedback(feedback);
-            submission.setStatus("GRADED");
-            submission.setGradedAt(LocalDateTime.now());
-        }
-        updateBatchById(submissions);
-        log.info("Batch graded {} submissions", submissionIds.size());
-        return true;
+        
+        log.info("Batch graded {} submissions by grader: {}", gradedSubmissions.size(), graderId);
+        return gradedSubmissions;
     }
 
     @Override
     public List<ActivitySubmission> getTopPerformers(Long activityId, int limit) {
-        return baseMapper.selectTopPerformers(activityId, limit);
+        QueryWrapper<ActivitySubmission> wrapper = new QueryWrapper<>();
+        wrapper.eq("activity_id", activityId)
+               .eq("status", "GRADED")
+               .isNotNull("score")
+               .orderByDesc("score")
+               .last("LIMIT " + limit);
+        return list(wrapper);
     }
 
     @Override
     public List<ActivitySubmission> getRecentSubmissions(Long teacherId, int hours) {
-        return baseMapper.selectRecentSubmissions(teacherId, hours);
+        // 简化实现：获取最近提交的记录
+        QueryWrapper<ActivitySubmission> wrapper = new QueryWrapper<>();
+        wrapper.eq("status", "SUBMITTED")
+               .orderByDesc("submitted_at")
+               .last("LIMIT 20"); // 限制返回最近20条记录
+        return list(wrapper);
     }
 
-    @Override
-    public Map<String, Object> getGradingWorkload(Long teacherId) {
-        Map<String, Object> workload = new HashMap<>();
-        
-        // 待评分的总数
-        QueryWrapper<ActivitySubmission> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("status", "SUBMITTED")
-                   .inSql("activity_id", 
-                          "SELECT id FROM course_activities WHERE teacher_id = " + teacherId);
-        long pendingCount = count(queryWrapper);
-        workload.put("pendingGrading", pendingCount);
-        
-        // 按活动类型分组的待评分数
-        List<Object> typeStats = baseMapper.countPendingByType(teacherId);
-        workload.put("pendingByType", typeStats);
-        
-        // 紧急需要评分的（快到截止时间）
-        List<Object> urgentStats = baseMapper.countUrgentGrading(teacherId, 24); // 24小时内截止
-        workload.put("urgentGrading", urgentStats);
-        
-        return workload;
-    }
+    // 移除了不在接口中定义的方法 getGradingWorkload
 
     @Override
     @Transactional
-    public ActivitySubmission autoGradeQuiz(Long submissionId) {
+    public ActivitySubmission autoGradeSubmission(Long submissionId) {
         ActivitySubmission submission = getById(submissionId);
         if (submission == null) {
             return null;
@@ -271,6 +171,109 @@ public class ActivitySubmissionServiceImpl extends ServiceImpl<ActivitySubmissio
         
         updateById(submission);
         log.info("Auto-graded quiz submission: {} with score: {}", submissionId, score);
+        return submission;
+    }
+
+    @Override
+    @Transactional
+    public ActivitySubmission saveDraft(ActivitySubmission submission) {
+        submission.setStatus("DRAFT");
+        submission.setSubmittedAt(LocalDateTime.now());
+        if (submission.getId() == null) {
+            save(submission);
+        } else {
+            updateById(submission);
+        }
+        log.info("Saved draft submission for activity: {} by student: {}", 
+                submission.getActivityId(), submission.getStudentId());
+        return submission;
+    }
+
+    @Override
+    public ActivitySubmission getStudentSubmission(Long studentId, Long activityId) {
+        QueryWrapper<ActivitySubmission> wrapper = new QueryWrapper<>();
+        wrapper.eq("student_id", studentId)
+               .eq("activity_id", activityId)
+               .orderByDesc("submitted_at")
+               .last("LIMIT 1");
+        return getOne(wrapper);
+    }
+
+    @Override
+    public List<ActivitySubmission> getStudentSubmissions(Long studentId, Long activityId) {
+        QueryWrapper<ActivitySubmission> wrapper = new QueryWrapper<>();
+        wrapper.eq("student_id", studentId)
+               .eq("activity_id", activityId)
+               .orderByDesc("submitted_at");
+        return list(wrapper);
+    }
+
+    @Override
+    public IPage<ActivitySubmission> getPendingGrading(Long teacherId, Page<ActivitySubmission> page) {
+        // 简化实现：返回所有SUBMITTED状态的提交
+        QueryWrapper<ActivitySubmission> wrapper = new QueryWrapper<>();
+        wrapper.eq("status", "SUBMITTED")
+               .orderByDesc("submitted_at");
+        return page(page, wrapper);
+    }
+
+    @Override
+    public Map<String, Object> getStudentStatistics(Long studentId, Long courseId) {
+        Map<String, Object> statistics = new java.util.HashMap<>();
+        
+        QueryWrapper<ActivitySubmission> wrapper = new QueryWrapper<>();
+        wrapper.eq("student_id", studentId);
+        
+        List<ActivitySubmission> submissions = list(wrapper);
+        
+        statistics.put("totalSubmissions", submissions.size());
+        statistics.put("gradedSubmissions", submissions.stream().filter(s -> "GRADED".equals(s.getStatus())).count());
+        statistics.put("averageScore", submissions.stream()
+                .filter(s -> s.getScore() != null)
+                .mapToDouble(s -> s.getScore().doubleValue())
+                .average().orElse(0.0));
+        
+        return statistics;
+    }
+
+    @Override
+    public List<ActivitySubmission> getLateSubmissions() {
+        QueryWrapper<ActivitySubmission> wrapper = new QueryWrapper<>();
+        wrapper.eq("status", "LATE_SUBMITTED")
+               .orderByDesc("submitted_at");
+        return list(wrapper);
+    }
+
+    @Override
+    public Boolean isSubmissionLate(Long activityId) {
+        CourseActivity activity = courseActivityService.getById(activityId);
+        if (activity != null && activity.getDueDate() != null) {
+            return LocalDateTime.now().isAfter(activity.getDueDate());
+        }
+        return false;
+    }
+
+    @Override
+    @Transactional
+    public ActivitySubmission returnSubmissionToStudent(Long submissionId, String feedback) {
+        ActivitySubmission submission = getById(submissionId);
+        if (submission != null) {
+            submission.setStatus("RETURNED");
+            submission.setFeedback(feedback);
+            submission.setGradedAt(LocalDateTime.now());
+            updateById(submission);
+            log.info("Returned submission {} to student with feedback", submissionId);
+        }
+        return submission;
+    }
+
+    @Override
+    public ActivitySubmission getSubmissionWithDetails(Long submissionId) {
+        ActivitySubmission submission = getById(submissionId);
+        if (submission != null) {
+            // 可以在这里加载额外的详细信息，比如答案解析等
+            log.info("Retrieved submission with details: {}", submissionId);
+        }
         return submission;
     }
 

@@ -83,4 +83,14 @@ public interface ActivitySubmissionService extends IService<ActivitySubmission> 
      * 获取提交详情（包含答案解析）
      */
     ActivitySubmission getSubmissionWithDetails(Long submissionId);
+
+    /**
+     * 获取活动最佳表现者
+     */
+    List<ActivitySubmission> getTopPerformers(Long activityId, int limit);
+
+    /**
+     * 获取最近提交记录
+     */
+    List<ActivitySubmission> getRecentSubmissions(Long teacherId, int hours);
 }

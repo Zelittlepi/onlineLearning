@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -49,10 +50,12 @@ public class SubmissionController {
     public ResponseEntity<ActivitySubmission> gradeSubmission(
             @PathVariable Long id,
             @RequestParam BigDecimal score,
-            @RequestParam(required = false) String feedback) {
+            @RequestParam(required = false) String feedback,
+            Authentication authentication) {
         
         try {
-            ActivitySubmission graded = submissionService.gradeSubmission(id, score, feedback);
+            Long graderId = Long.parseLong(authentication.getName());
+            ActivitySubmission graded = submissionService.gradeSubmission(id, score, feedback, graderId);
             if (graded != null) {
                 return ResponseEntity.ok(graded);
             }
@@ -68,7 +71,7 @@ public class SubmissionController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<ActivitySubmission> getSubmission(@PathVariable Long id) {
-        ActivitySubmission submission = submissionService.getSubmissionById(id);
+        ActivitySubmission submission = submissionService.getById(id);
         if (submission != null) {
             return ResponseEntity.ok(submission);
         }
@@ -88,10 +91,12 @@ public class SubmissionController {
     /**
      * 获取学生的所有提交
      */
-    @GetMapping("/student/{studentId}")
+    @GetMapping("/student/{studentId}/activity/{activityId}")
     @PreAuthorize("hasRole('STUDENT') or hasRole('TEACHER')")
-    public ResponseEntity<List<ActivitySubmission>> getSubmissionsByStudent(@PathVariable Long studentId) {
-        List<ActivitySubmission> submissions = submissionService.getSubmissionsByStudent(studentId);
+    public ResponseEntity<List<ActivitySubmission>> getStudentSubmissions(
+            @PathVariable Long studentId, 
+            @PathVariable Long activityId) {
+        List<ActivitySubmission> submissions = submissionService.getStudentSubmissions(studentId, activityId);
         return ResponseEntity.ok(submissions);
     }
 
@@ -103,8 +108,7 @@ public class SubmissionController {
             @PathVariable Long activityId,
             @PathVariable Long studentId) {
         
-        ActivitySubmission submission = submissionService.getSubmissionByActivityAndStudent(
-                activityId, studentId);
+        ActivitySubmission submission = submissionService.getStudentSubmission(studentId, activityId);
         if (submission != null) {
             return ResponseEntity.ok(submission);
         }
@@ -116,8 +120,12 @@ public class SubmissionController {
      */
     @GetMapping("/teacher/{teacherId}")
     @PreAuthorize("hasRole('TEACHER')")
-    public ResponseEntity<List<ActivitySubmission>> getSubmissionsByTeacher(@PathVariable Long teacherId) {
-        List<ActivitySubmission> submissions = submissionService.getSubmissionsByTeacher(teacherId);
+    public ResponseEntity<IPage<ActivitySubmission>> getPendingGradingForTeacher(
+            @PathVariable Long teacherId,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<ActivitySubmission> pageParam = new Page<>(page, size);
+        IPage<ActivitySubmission> submissions = submissionService.getPendingGrading(teacherId, pageParam);
         return ResponseEntity.ok(submissions);
     }
 
@@ -133,8 +141,7 @@ public class SubmissionController {
             @RequestParam(defaultValue = "SUBMITTED") String status) {
         
         Page<ActivitySubmission> page = new Page<>(current, size);
-        IPage<ActivitySubmission> submissions = submissionService.getSubmissionsForGrading(
-                teacherId, status, page);
+        IPage<ActivitySubmission> submissions = submissionService.getPendingGrading(teacherId, page);
         return ResponseEntity.ok(submissions);
     }
 
@@ -146,7 +153,8 @@ public class SubmissionController {
             @PathVariable Long activityId,
             @PathVariable Long studentId) {
         
-        int count = submissionService.getAttemptCount(activityId, studentId);
+        List<ActivitySubmission> submissions = submissionService.getStudentSubmissions(studentId, activityId);
+        int count = submissions != null ? submissions.size() : 0;
         return ResponseEntity.ok(count);
     }
 
@@ -156,7 +164,12 @@ public class SubmissionController {
     @GetMapping("/statistics/activity/{activityId}")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<Map<String, Object>> getSubmissionStatistics(@PathVariable Long activityId) {
-        Map<String, Object> statistics = submissionService.getSubmissionStatistics(activityId);
+        // 获取活动的所有提交并计算统计信息
+        List<ActivitySubmission> submissions = submissionService.getSubmissionsByActivity(activityId);
+        Map<String, Object> statistics = new java.util.HashMap<>();
+        statistics.put("totalSubmissions", submissions.size());
+        statistics.put("gradedSubmissions", submissions.stream().filter(s -> "GRADED".equals(s.getStatus())).count());
+        statistics.put("pendingSubmissions", submissions.stream().filter(s -> "SUBMITTED".equals(s.getStatus())).count());
         return ResponseEntity.ok(statistics);
     }
 
@@ -169,7 +182,7 @@ public class SubmissionController {
             @PathVariable Long studentId,
             @PathVariable Long courseId) {
         
-        Map<String, Object> progress = submissionService.getStudentProgress(studentId, courseId);
+        Map<String, Object> progress = submissionService.getStudentStatistics(studentId, courseId);
         return ResponseEntity.ok(progress);
     }
 
@@ -182,8 +195,8 @@ public class SubmissionController {
             @PathVariable Long id,
             @RequestParam String reason) {
         
-        boolean success = submissionService.returnSubmission(id, reason);
-        if (success) {
+        ActivitySubmission returned = submissionService.returnSubmissionToStudent(id, reason);
+        if (returned != null) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
@@ -194,17 +207,14 @@ public class SubmissionController {
      */
     @PutMapping("/batch-grade")
     @PreAuthorize("hasRole('TEACHER')")
-    public ResponseEntity<Void> batchGradeSubmissions(
-            @RequestParam List<Long> submissionIds,
-            @RequestParam BigDecimal score,
-            @RequestParam(required = false) String feedback) {
+    public ResponseEntity<List<ActivitySubmission>> batchGradeSubmissions(
+            @RequestBody List<Map<String, Object>> gradingData,
+            Authentication authentication) {
         
         try {
-            boolean success = submissionService.batchGradeSubmissions(submissionIds, score, feedback);
-            if (success) {
-                return ResponseEntity.ok().build();
-            }
-            return ResponseEntity.badRequest().build();
+            Long graderId = Long.parseLong(authentication.getName());
+            List<ActivitySubmission> gradedSubmissions = submissionService.batchGradeSubmissions(gradingData, graderId);
+            return ResponseEntity.ok(gradedSubmissions);
         } catch (Exception e) {
             log.error("Error batch grading submissions", e);
             return ResponseEntity.badRequest().build();
@@ -233,8 +243,7 @@ public class SubmissionController {
             @PathVariable Long teacherId,
             @RequestParam(defaultValue = "24") int hours) {
         
-        List<ActivitySubmission> recentSubmissions = submissionService.getRecentSubmissions(
-                teacherId, hours);
+        List<ActivitySubmission> recentSubmissions = submissionService.getRecentSubmissions(teacherId, hours);
         return ResponseEntity.ok(recentSubmissions);
     }
 
@@ -244,7 +253,12 @@ public class SubmissionController {
     @GetMapping("/workload/teacher/{teacherId}")
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<Map<String, Object>> getGradingWorkload(@PathVariable Long teacherId) {
-        Map<String, Object> workload = submissionService.getGradingWorkload(teacherId);
+        // 简化实现：计算待评分数量作为工作量
+        Page<ActivitySubmission> page = new Page<>(1, Integer.MAX_VALUE);
+        IPage<ActivitySubmission> submissions = submissionService.getPendingGrading(teacherId, page);
+        Map<String, Object> workload = new java.util.HashMap<>();
+        workload.put("pendingGrading", submissions.getTotal());
+        workload.put("teacherId", teacherId);
         return ResponseEntity.ok(workload);
     }
 
@@ -255,7 +269,7 @@ public class SubmissionController {
     @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<ActivitySubmission> autoGradeQuiz(@PathVariable Long id) {
         try {
-            ActivitySubmission graded = submissionService.autoGradeQuiz(id);
+            ActivitySubmission graded = submissionService.autoGradeSubmission(id);
             if (graded != null) {
                 return ResponseEntity.ok(graded);
             }
