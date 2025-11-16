@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../activities.css';
 
 const ActivityManagement = ({ user }) => {
+  const navigate = useNavigate();
   const [activities, setActivities] = useState([]);
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -542,6 +544,12 @@ const ActivityManagement = ({ user }) => {
               </div>
               
               <div className="activity-actions">
+                <button 
+                  className="btn-primary"
+                  onClick={() => navigate(`/activity/${activity.id}`)}
+                >
+                  查看详情
+                </button>
                 {!activity.isPublished && (
                   <button 
                     className="btn-primary"

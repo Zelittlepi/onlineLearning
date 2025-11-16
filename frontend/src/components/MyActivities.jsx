@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../activities.css';
 
 const MyActivities = ({ user }) => {
+  const navigate = useNavigate();
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('pending');
@@ -330,6 +332,12 @@ const MyActivities = ({ user }) => {
               </div>
 
               <div className="activity-actions">
+                <button 
+                  className="btn-secondary"
+                  onClick={() => navigate(`/activity/${activity.id}`)}
+                >
+                  查看详情
+                </button>
                 {canSubmit(activity) && (
                   <button 
                     className="btn-primary"
