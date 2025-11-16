@@ -3,6 +3,7 @@ package com.education.system.dto;
 public class LoginResponse {
     private String token;
     private String type = "Bearer";
+    private Long id;
     private String username;
     private String role;
     private String fullName;
@@ -10,8 +11,9 @@ public class LoginResponse {
     
     public LoginResponse() {}
     
-    public LoginResponse(String token, String username, String role, String fullName, String email) {
+    public LoginResponse(String token, Long id, String username, String role, String fullName, String email) {
         this.token = token;
+        this.id = id;
         this.username = username;
         this.role = role;
         this.fullName = fullName;
@@ -32,6 +34,14 @@ public class LoginResponse {
     
     public void setType(String type) {
         this.type = type;
+    }
+    
+    public Long getId() {
+        return id;
+    }
+    
+    public void setId(Long id) {
+        this.id = id;
     }
     
     public String getUsername() {

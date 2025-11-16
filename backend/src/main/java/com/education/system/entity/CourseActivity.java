@@ -27,6 +27,12 @@ public class CourseActivity {
     private Long courseId;
 
     /**
+     * 教师ID
+     */
+    @TableField("teacher_id")
+    private Long teacherId;
+
+    /**
      * 活动标题
      */
     @TableField("title")
@@ -54,21 +60,21 @@ public class CourseActivity {
      * 截止时间
      */
     @TableField("due_date")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime dueDate;
 
     /**
      * 开始时间
      */
     @TableField("available_from")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime availableFrom;
 
     /**
      * 结束时间
      */
     @TableField("available_until")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime availableUntil;
 
     /**

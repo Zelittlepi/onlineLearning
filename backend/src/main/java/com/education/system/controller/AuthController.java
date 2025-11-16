@@ -52,6 +52,7 @@ public class AuthController {
             
             LoginResponse response = new LoginResponse(
                 token,
+                user.getId(),
                 user.getUsername(),
                 user.getRole().name(),
                 user.getFullName(),
@@ -132,6 +133,7 @@ public class AuthController {
             
             LoginResponse response = new LoginResponse(
                 token,
+                user.getId(),
                 user.getUsername(),
                 user.getRole().name(),
                 user.getFullName(),

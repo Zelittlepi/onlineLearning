@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +22,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/api/activities")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:3000"})
 public class ActivityController {
 
     @Autowired
@@ -30,13 +33,99 @@ public class ActivityController {
      */
     @PostMapping
     @PreAuthorize("hasRole('TEACHER')")
-    public ResponseEntity<CourseActivity> createActivity(@RequestBody CourseActivity activity) {
+    public ResponseEntity<?> createActivity(@RequestBody Map<String, Object> requestData) {
         try {
+            log.info("Received activity data: {}", requestData);
+            
+            CourseActivity activity = new CourseActivity();
+            
+            // 安全地获取必需字段
+            if (requestData.get("courseId") == null) {
+                throw new IllegalArgumentException("courseId is required");
+            }
+            if (requestData.get("teacherId") == null) {
+                throw new IllegalArgumentException("teacherId is required");
+            }
+            if (requestData.get("title") == null) {
+                throw new IllegalArgumentException("title is required");
+            }
+            if (requestData.get("activityType") == null) {
+                throw new IllegalArgumentException("activityType is required");
+            }
+            
+            activity.setCourseId(Long.valueOf(requestData.get("courseId").toString()));
+            activity.setTeacherId(Long.valueOf(requestData.get("teacherId").toString()));
+            activity.setTitle((String) requestData.get("title"));
+            
+            // 安全地获取可选字段
+            if (requestData.get("description") != null) {
+                activity.setDescription((String) requestData.get("description"));
+            }
+            if (requestData.get("instructions") != null) {
+                activity.setInstructions((String) requestData.get("instructions"));
+            }
+            
+            activity.setActivityType((String) requestData.get("activityType"));
+            
+            // 处理日期时间
+            if (requestData.get("dueDate") != null) {
+                String dueDateStr = requestData.get("dueDate").toString();
+                log.info("Processing dueDate: {}", dueDateStr);
+                // 移除时区信息并解析
+                if (dueDateStr.contains("T")) {
+                    dueDateStr = dueDateStr.replace("Z", "").replace("T", " ");
+                    if (dueDateStr.contains(".")) {
+                        dueDateStr = dueDateStr.substring(0, dueDateStr.indexOf("."));
+                    }
+                    activity.setDueDate(LocalDateTime.parse(dueDateStr.replace(" ", "T")));
+                }
+            }
+            
+            if (requestData.get("maxScore") != null) {
+                activity.setMaxScore(new BigDecimal(requestData.get("maxScore").toString()));
+            }
+            if (requestData.get("timeLimitMinutes") != null) {
+                activity.setTimeLimitMinutes(Integer.valueOf(requestData.get("timeLimitMinutes").toString()));
+            }
+            if (requestData.get("attemptsAllowed") != null) {
+                activity.setAttemptsAllowed(Integer.valueOf(requestData.get("attemptsAllowed").toString()));
+            }
+            
+            if (requestData.get("submissionType") != null) {
+                activity.setSubmissionType((String) requestData.get("submissionType"));
+            }
+            
+            // 处理布尔值，提供默认值
+            if (requestData.get("isPublished") != null) {
+                activity.setIsPublished((Boolean) requestData.get("isPublished"));
+            } else {
+                activity.setIsPublished(false); // 默认值
+            }
+            
+            if (requestData.get("isRequired") != null) {
+                activity.setIsRequired((Boolean) requestData.get("isRequired"));
+            } else {
+                activity.setIsRequired(true); // 默认值
+            }
+            
+            if (requestData.get("weight") != null) {
+                activity.setWeight(new BigDecimal(requestData.get("weight").toString()));
+            }
+            
+            if (requestData.get("gradingMethod") != null) {
+                activity.setGradingMethod((String) requestData.get("gradingMethod"));
+            }
+            
+            log.info("Creating activity: {}", activity);
             CourseActivity created = courseActivityService.createActivity(activity);
+            log.info("Activity created successfully with ID: {}", created.getId());
             return ResponseEntity.ok(created);
         } catch (Exception e) {
             log.error("Error creating activity", e);
-            return ResponseEntity.badRequest().build();
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            errorResponse.put("type", e.getClass().getSimpleName());
+            return ResponseEntity.badRequest().body(errorResponse);
         }
     }
 

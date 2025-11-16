@@ -73,28 +73,71 @@ const ActivityManagement = ({ user }) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
+      const storedUser = localStorage.getItem('user');
+      
+      console.log('Token:', token); // 调试token
+      console.log('Stored user string:', storedUser); // 调试存储的用户字符串
+      console.log('User object:', user); // 调试用户对象
+      console.log('User id:', user?.id); // 调试用户ID
+      
+      // 如果用户对象为空，尝试从localStorage重新获取
+      let currentUser = user;
+      if (!currentUser && storedUser) {
+        try {
+          currentUser = JSON.parse(storedUser);
+          console.log('Parsed user from localStorage:', currentUser);
+        } catch (e) {
+          console.error('Failed to parse stored user:', e);
+        }
+      }
+      
+      if (!currentUser || !currentUser.id) {
+        alert('User information is missing. Please login again.');
+        return;
+      }
+      
+      // 格式化日期为 yyyy-MM-dd HH:mm:ss 格式
+      const formatDateTime = (dateString) => {
+        if (!dateString) return null;
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      };
+      
       const activityData = {
         ...newActivity,
-        courseId: selectedCourse,
-        teacherId: user.id,
-        dueDate: newActivity.dueDate ? new Date(newActivity.dueDate).toISOString() : null
+        courseId: parseInt(selectedCourse),
+        teacherId: currentUser.id,
+        dueDate: formatDateTime(newActivity.dueDate)
       };
+      
+      console.log('Creating activity with data:', activityData);
       
       const response = await axios.post(
         'http://localhost:8080/api/activities', 
         activityData,
         {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
         }
       );
       
+      console.log('Activity created successfully:', response.data);
       setActivities([response.data, ...activities]);
       setShowCreateForm(false);
       resetForm();
       alert('Activity created successfully!');
     } catch (error) {
       console.error('Failed to create activity:', error);
-      alert('Failed to create activity, please try again');
+      console.error('Error response:', error.response?.data);
+      alert('Failed to create activity: ' + (error.response?.data?.message || error.message));
     }
   };
 

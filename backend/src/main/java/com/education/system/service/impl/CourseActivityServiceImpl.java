@@ -42,8 +42,17 @@ public class CourseActivityServiceImpl extends ServiceImpl<CourseActivityMapper,
             activity.setAvailableFrom(LocalDateTime.now());
         }
         
+        // 验证必要字段
+        if (activity.getCourseId() == null) {
+            throw new IllegalArgumentException("Course ID is required");
+        }
+        if (activity.getTeacherId() == null) {
+            throw new IllegalArgumentException("Teacher ID is required");
+        }
+        
         save(activity);
-        log.info("Created activity: {} for course: {}", activity.getTitle(), activity.getCourseId());
+        log.info("Created activity: {} for course: {} by teacher: {}", 
+                activity.getTitle(), activity.getCourseId(), activity.getTeacherId());
         return activity;
     }
 

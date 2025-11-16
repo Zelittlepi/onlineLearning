@@ -34,8 +34,8 @@ public interface CourseActivityMapper extends BaseMapper<CourseActivity> {
     @Select("SELECT ca.*, c.title as course_name " +
             "FROM course_activities ca " +
             "LEFT JOIN courses c ON ca.course_id = c.id " +
-            "WHERE c.teacher_id = #{teacherId} " +
-            "AND ca.activity_type = #{activityType} " +
+            "WHERE ca.teacher_id = #{teacherId} " +
+            "AND (#{activityType} IS NULL OR ca.activity_type = #{activityType}) " +
             "ORDER BY ca.created_at DESC")
     IPage<CourseActivity> selectByTeacherIdAndType(Page<CourseActivity> page, 
                                                    @Param("teacherId") Long teacherId, 
