@@ -5,20 +5,20 @@ spring:
   application:
     name: education-system
   
-  # 使用PostgreSQL数据库
+  # 使用mySQL数据库
   datasource:
-    url: jdbc:postgresql://aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres
-    username: postgres.gxauxmtreswttfidxleh
-    password: wzsgdsg0031
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:mysql://129.204.10.71:3306/online_learning?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: remote_user
+    password: Wz20010318.
+    driver-class-name: com.mysql.cj.jdbc.Driver
     
-    # 针对Supabase免费层优化连接池
+    # 针对mysql免费层优化连接池
     hikari:
-      maximum-pool-size: 1
-      minimum-idle: 0
-      connection-timeout: 20000
-      idle-timeout: 300000
-      max-lifetime: 1200000
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
     
   # CORS Configuration
   web:
