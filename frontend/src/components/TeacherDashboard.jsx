@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import CourseManagement from './CourseManagement';
 import ActivityManagement from './ActivityManagement';
+import StudentManagement from './StudentManagement';
 
 const TeacherDashboard = () => {
   const { user, logout } = useAuth();
@@ -177,66 +178,7 @@ const TeacherDashboard = () => {
         return <ActivityManagement user={user} />;
 
       case 'students':
-        return (
-          <div className="module-content-area">
-            <div className="content-header">
-              <h2>👥 Student Management</h2>
-              <p>View and manage student information in your courses</p>
-            </div>
-
-            <div className="grades-table">
-              <h3>Student List</h3>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Student ID</th>
-                    <th>Name</th>
-                    <th>Course</th>
-                    <th>Average Grade</th>
-                    <th>Attendance</th>
-                    <th>Last Active</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>2021001</td>
-                    <td>John Zhang</td>
-                    <td>Data Structures</td>
-                    <td>89</td>
-                    <td>95%</td>
-                    <td>2 hours ago</td>
-                    <td>
-                      <button className="btn-secondary">View Details</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2021002</td>
-                    <td>Li Si</td>
-                    <td>Software Engineering</td>
-                    <td>92</td>
-                    <td>88%</td>
-                    <td>1 day ago</td>
-                    <td>
-                      <button className="btn-secondary">View Details</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2021003</td>
-                    <td>Wang Wu</td>
-                    <td>Data Structures</td>
-                    <td>78</td>
-                    <td>92%</td>
-                    <td>3 hours ago</td>
-                    <td>
-                      <button className="btn-secondary">View Details</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        );
+        return <StudentManagement />;
 
       default:
         return (
