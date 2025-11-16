@@ -59,6 +59,7 @@ public class SecurityConfig {
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/public/**").permitAll()
                 .antMatchers("/api/student/test").permitAll()
+                .antMatchers("/api/test/**").permitAll() // 允许访问调试端点
                 .antMatchers("/api/teacher/**").hasRole("TEACHER")
                 .antMatchers("/api/student/**").hasRole("STUDENT")
                 .anyRequest().authenticated()
