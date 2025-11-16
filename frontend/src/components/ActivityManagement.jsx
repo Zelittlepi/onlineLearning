@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import FileUpload from './FileUpload';
+import FileList from './FileList';
 import '../activities.css';
 
 const ActivityManagement = ({ user }) => {
@@ -12,6 +14,9 @@ const ActivityManagement = ({ user }) => {
   const [selectedCourse, setSelectedCourse] = useState('');
   const [activeTab, setActiveTab] = useState('all');
   const [selectedActivityType, setSelectedActivityType] = useState('ASSIGNMENT');
+  
+  // 文件管理状态
+  const [attachmentFiles, setAttachmentFiles] = useState([]);
 
   // New activity form data
   const [newActivity, setNewActivity] = useState({
@@ -132,6 +137,24 @@ const ActivityManagement = ({ user }) => {
       );
       
       console.log('Activity created successfully:', response.data);
+      
+      // 如果有附件文件，更新它们的entityId为新创建的活动ID
+      if (attachmentFiles.length > 0) {
+        try {
+          for (const file of attachmentFiles) {
+            await axios.put(`http://localhost:8080/api/files/${file.id}/entity`, {
+              entityType: 'ACTIVITY',
+              entityId: response.data.id
+            }, {
+              headers: { Authorization: `Bearer ${token}` }
+            });
+          }
+          console.log('File associations updated successfully');
+        } catch (fileError) {
+          console.error('Failed to associate files with activity:', fileError);
+          // 不阻止活动创建成功的提示，但记录错误
+        }
+      }
       setActivities([response.data, ...activities]);
       setShowCreateForm(false);
       resetForm();
@@ -201,6 +224,29 @@ const ActivityManagement = ({ user }) => {
       gradingMethod: 'MANUAL',
       configuration: {}
     });
+    setAttachmentFiles([]);
+  };
+
+  // 文件上传处理函数
+  const handleFileUploadSuccess = (uploadedFiles) => {
+    console.log('Files uploaded successfully:', uploadedFiles);
+    
+    // 如果是单个文件，转换为数组
+    const files = Array.isArray(uploadedFiles) ? uploadedFiles : [uploadedFiles];
+    
+    // 添加到附件文件列表
+    setAttachmentFiles(prevFiles => [...prevFiles, ...files]);
+  };
+
+  const handleFileUploadError = (error) => {
+    console.error('File upload error:', error);
+    alert(`文件上传失败: ${error}`);
+  };
+
+  const handleFileDelete = (fileToDelete) => {
+    setAttachmentFiles(prevFiles => 
+      prevFiles.filter(file => file.fileName !== fileToDelete.fileName)
+    );
   };
 
   const getActivityTypeText = (type) => {
@@ -394,6 +440,30 @@ const ActivityManagement = ({ user }) => {
                   placeholder="Detailed requirements and instructions"
                   rows="5"
                 />
+              </div>
+              
+              {/* 文件上传区域 */}
+              <div className="form-group">
+                <label>Activity Attachments</label>
+                <p className="field-description">
+                  Upload files that students will need for this activity (e.g., templates, reference materials, datasets)
+                </p>
+                <FileUpload
+                  entityType="ACTIVITY"
+                  entityId={null} // 活动还未创建，创建后再关联
+                  onUploadSuccess={handleFileUploadSuccess}
+                  multiple={true}
+                  accept=".pdf,.doc,.docx,.txt,.md,.jpg,.png,.zip,.rar,.xlsx,.pptx"
+                  maxSize={50 * 1024 * 1024} // 50MB
+                  maxFiles={10}
+                />
+                {attachmentFiles.length > 0 && (
+                  <FileList
+                    files={attachmentFiles}
+                    onDelete={handleFileDelete}
+                    showActions={true}
+                  />
+                )}
               </div>
               
               <div className="form-row">

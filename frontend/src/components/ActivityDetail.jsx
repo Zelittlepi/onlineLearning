@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
+import FileUpload from './FileUpload';
+import FileList from './FileList';
 import './ActivityDetail.css';
 
 const ActivityDetail = () => {
@@ -15,6 +18,11 @@ const ActivityDetail = () => {
   const [submissionModal, setSubmissionModal] = useState(false);
   const [gradingModal, setGradingModal] = useState(null);
   const [viewModal, setViewModal] = useState(null);
+  
+  // 文件相关状态
+  const [activityFiles, setActivityFiles] = useState([]);
+  const [submissionFiles, setSubmissionFiles] = useState([]);
+  
   const [submissionData, setSubmissionData] = useState({
     submissionText: '',
     fileUrls: []
@@ -24,8 +32,44 @@ const ActivityDetail = () => {
     feedback: ''
   });
 
+  // 获取活动附件
+  const fetchActivityFiles = async () => {
+    try {
+      const response = await api.get(`/files/list/ACTIVITY/${id}`);
+      setActivityFiles(response.data);
+    } catch (error) {
+      console.error('获取活动附件失败:', error);
+    }
+  };
+
+  // 处理提交文件上传成功
+  const handleSubmissionFilesUploaded = (uploadedFiles) => {
+    const fileUrls = uploadedFiles.map(file => file.downloadUrl);
+    setSubmissionData(prev => ({
+      ...prev,
+      fileUrls: [...prev.fileUrls, ...fileUrls]
+    }));
+    setSubmissionFiles(prev => [...prev, ...uploadedFiles]);
+  };
+
+  // 删除提交文件
+  const handleDeleteSubmissionFile = async (fileId) => {
+    try {
+      await api.delete(`/files/${fileId}`);
+      setSubmissionFiles(prev => prev.filter(file => file.id !== fileId));
+      setSubmissionData(prev => ({
+        ...prev,
+        fileUrls: prev.fileUrls.filter(url => !url.includes(fileId))
+      }));
+    } catch (error) {
+      console.error('删除文件失败:', error);
+      alert('删除文件失败');
+    }
+  };
+
   useEffect(() => {
     fetchActivityDetail();
+    fetchActivityFiles();
     if (user?.role === 'TEACHER') {
       fetchSubmissions();
     } else if (user?.role === 'STUDENT') {
@@ -277,6 +321,20 @@ const ActivityDetail = () => {
             </div>
           )}
 
+          {/* Activity Attachments */}
+          {activityFiles.length > 0 && (
+            <div className="info-card" style={{marginBottom: '30px'}}>
+              <h3><span className="icon">📎</span>Activity Attachments</h3>
+              <div className="file-attachments">
+                <FileList 
+                  files={activityFiles}
+                  showActions={false}
+                  showDownload={true}
+                />
+              </div>
+            </div>
+          )}
+
           {/* Student View */}
           {user?.role === 'STUDENT' && (
             <div className="submissions-section">
@@ -456,6 +514,29 @@ const ActivityDetail = () => {
                   placeholder="Enter your submission here..."
                   required
                 />
+              </div>
+              
+              <div className="form-group">
+                <label className="form-label">Upload Files (Optional)</label>
+                <FileUpload 
+                  entityType="SUBMISSION"
+                  entityId={null} // 将在提交后设置
+                  onUploadSuccess={handleSubmissionFilesUploaded}
+                  accept=".pdf,.doc,.docx,.txt,.md,.jpg,.png,.zip,.rar"
+                  maxFiles={5}
+                  maxSize={50 * 1024 * 1024} // 50MB
+                />
+                
+                {submissionFiles.length > 0 && (
+                  <div className="uploaded-files">
+                    <h5>已上传的文件:</h5>
+                    <FileList 
+                      files={submissionFiles}
+                      onDelete={handleDeleteSubmissionFile}
+                      showActions={true}
+                    />
+                  </div>
+                )}
               </div>
             </div>
             <div className="modal-footer">
