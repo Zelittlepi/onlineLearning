@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import MyCourses from './MyCourses';
 import MyActivities from './MyActivities';
+import Grades from './Grades';
 
 const StudentDashboard = () => {
   const { user, logout } = useAuth();
@@ -177,74 +178,7 @@ const StudentDashboard = () => {
         return <MyActivities user={user} />;
 
       case 'grades':
-        return (
-          <div className="module-content-area">
-            <div className="content-header">
-              <h2>📊 Grades</h2>
-              <p>View your exam and assignment grades</p>
-            </div>
-
-            <div className="grades-summary">
-              <div className="grade-card">
-                <h3>Semester Grade</h3>
-                <div className="grade-value">85.2</div>
-                <p>Rank: 15/120</p>
-              </div>
-              <div className="grade-card">
-                <h3>GPA</h3>
-                <div className="grade-value">3.7</div>
-                <p>Out of: 4.0</p>
-              </div>
-              <div className="grade-card">
-                <h3>Credits</h3>
-                <div className="grade-value">18/24</div>
-                <p>Earned/Total</p>
-              </div>
-            </div>
-
-            <div className="grades-table">
-              <h3>Course Grade Details</h3>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Course Name</th>
-                    <th>Midterm</th>
-                    <th>Final</th>
-                    <th>Coursework</th>
-                    <th>Overall</th>
-                    <th>Credits</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Data Structures & Algorithms</td>
-                    <td>88</td>
-                    <td>92</td>
-                    <td>85</td>
-                    <td>89</td>
-                    <td>4</td>
-                  </tr>
-                  <tr>
-                    <td>Advanced Mathematics</td>
-                    <td>75</td>
-                    <td>-</td>
-                    <td>82</td>
-                    <td>78</td>
-                    <td>6</td>
-                  </tr>
-                  <tr>
-                    <td>College English</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>4</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        );
+        return <Grades />;
 
       default:
         return (

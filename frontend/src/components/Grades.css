@@ -1,0 +1,489 @@
+/* Grades 页面样式 */
+.grades-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.grades-header {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: white;
+  padding: 40px;
+  border-radius: 20px 20px 0 0;
+  margin-bottom: 0;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.page-title .icon {
+  font-size: 2.5rem;
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+/* 成绩概览卡片 */
+.grades-overview {
+  background: white;
+  margin: 0 0 20px 0;
+  padding: 30px 40px;
+}
+
+.overview-card {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.overview-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.overview-icon {
+  font-size: 2rem;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  border-radius: 15px;
+  color: white;
+}
+
+.overview-content {
+  flex: 1;
+}
+
+.overview-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 5px;
+}
+
+.overview-label {
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* 课程筛选 */
+.course-filter {
+  background: white;
+  padding: 30px 40px;
+  margin: 0 0 20px 0;
+}
+
+.filter-section {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.filter-section h3 {
+  margin: 0 0 20px 0;
+  color: #1e293b;
+  font-size: 1.25rem;
+}
+
+.course-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.course-btn {
+  padding: 10px 20px;
+  border: 2px solid #e2e8f0;
+  background: white;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  color: #64748b;
+}
+
+.course-btn:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.course-btn.active {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  border-color: transparent;
+}
+
+/* 成绩标签 */
+.grade-tabs {
+  background: white;
+  padding: 20px 40px;
+  display: flex;
+  gap: 15px;
+  border-bottom: 1px solid #e2e8f0;
+  margin: 0 0 0 0;
+}
+
+.tab-btn {
+  padding: 12px 24px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #64748b;
+  transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.tab-btn.active {
+  background: #3b82f6;
+  color: white;
+}
+
+/* 成绩内容 */
+.grades-content {
+  background: white;
+  padding: 0 40px 40px;
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.grades-table {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1.2fr 1fr 1.2fr;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 2px solid #e2e8f0;
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1.2fr 1fr 1.2fr;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid #f1f5f9;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.table-row:hover {
+  background: #f8fafc;
+  transform: translateX(5px);
+}
+
+/* 活动信息列 */
+.activity-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.activity-icon {
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.activity-name {
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.activity-type {
+  font-size: 0.8rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* 课程列 */
+.course-name {
+  font-weight: 500;
+  color: #475569;
+  padding: 6px 12px;
+  background: #f1f5f9;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+/* 日期列 */
+.due-date {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+/* 状态标识 */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.graded {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-badge.submitted {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-badge.not_submitted {
+  background: #fecaca;
+  color: #991b1b;
+}
+
+.status-badge.returned {
+  background: #ddd6fe;
+  color: #5b21b6;
+}
+
+.status-icon {
+  font-size: 1rem;
+}
+
+/* 分数显示 */
+.score-display {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 1rem;
+}
+
+.score-pending {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* 成绩显示 */
+.grade-display {
+  text-align: center;
+}
+
+.grade-percentage {
+  display: block;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 2px;
+}
+
+.grade-letter {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* 成绩颜色 */
+.grade-a {
+  color: #059669;
+}
+
+.grade-a .grade-percentage {
+  color: #059669;
+}
+
+.grade-b {
+  color: #0ea5e9;
+}
+
+.grade-b .grade-percentage {
+  color: #0ea5e9;
+}
+
+.grade-c {
+  color: #eab308;
+}
+
+.grade-c .grade-percentage {
+  color: #eab308;
+}
+
+.grade-d {
+  color: #f97316;
+}
+
+.grade-d .grade-percentage {
+  color: #f97316;
+}
+
+.grade-f {
+  color: #dc2626;
+}
+
+.grade-f .grade-percentage {
+  color: #dc2626;
+}
+
+.grade-pending {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: #64748b;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #475569;
+}
+
+.empty-state p {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+/* 加载状态 */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  color: white;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .table-header,
+  .table-row {
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 15px;
+  }
+  
+  .col-course {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .grades-container {
+    padding: 10px;
+  }
+  
+  .grades-header,
+  .grades-overview,
+  .course-filter,
+  .grade-tabs,
+  .grades-content {
+    padding: 20px;
+  }
+  
+  .page-title {
+    font-size: 2rem;
+  }
+  
+  .overview-card {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+  }
+  
+  .overview-item {
+    padding: 15px;
+  }
+  
+  .table-header,
+  .table-row {
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 10px;
+  }
+  
+  .col-course,
+  .col-due,
+  .col-score {
+    display: none;
+  }
+  
+  .activity-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .course-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .course-btn {
+    text-align: left;
+  }
+}
